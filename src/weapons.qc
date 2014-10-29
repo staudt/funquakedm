@@ -119,7 +119,7 @@ SpawnBlood
 */
 void(vector org, vector vel, float damage) SpawnBlood =
 {
-	particle (org, vel*0.1, 73, damage*2);
+	particle (org, vel*0.1, 73, damage*4);	// more blood
 };
 
 /*
@@ -480,7 +480,7 @@ void() W_FireLightning =
 		cells = self.ammo_cells;
 		self.ammo_cells = 0;
 		W_SetCurrentAmmo ();
-		T_RadiusDamage (self, self, 35*cells, world);
+		T_RadiusDamage (self, self, 80*cells, world);	// more damage
 		return;
 	}
 
@@ -507,7 +507,7 @@ void() W_FireLightning =
 	WriteCoord (MSG_BROADCAST, trace_endpos_y);
 	WriteCoord (MSG_BROADCAST, trace_endpos_z);
 
-	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 30);
+	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 300); // 300 damage for instagib
 };
 
 
