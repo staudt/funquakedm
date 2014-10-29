@@ -1,0 +1,28 @@
+FTE Quake: http://www.fteqw.com/ftedownloads/30-downloads/75-maintrunk
+QuakeC specs: http://www.inside3d.com/qcspecs/qc-menu.htm
+Tutorials: http://www.inside3d.com/qctut/
+Examples: http://www.gamers.org/pub/idgames2/quakec/
+
+Todos:
+- Bots?
+- Admin commands:
+	- Jump/switch level w/o killing the server
+- Alternate weapon shot (http://www.inside3d.com/qctut/qctut-74.shtml)
+- Drop all weapons when dead
+- Everything teleports
+- Gradually speeding rockets (http://www.inside3d.com/qctut/qctut-81.shtml)
+- Weapons:
+	Axe: Stronger, Stun effect / (Grappling hook?) http://www.inside3d.com/qctut/qctut-78.shtml
+	Shotgun: Slow but stronger shot / Slower double shot
+	Machine Gun: Fast shots / (Driller?)
+	Rocket Launcher: Rocket / Contact Grenade
+	Lasergun: Slow instagib discharge / Shield?
+
+---
+other weapon ideas:
+	multi-grenades, chainsaw, landmines, homing missile
+	stick grenades (http://www.inside3d.com/qctut/qctut-19.shtml)
+	molotov (http://www.inside3d.com/qctut/qctut-81.shtml)
+
+Ideas of other mods:
+	- Horde mode
