@@ -472,7 +472,7 @@ void(string gibname, float dm) ThrowGib =
 	new.avelocity_z = random()*600;
 	new.think = SUB_Remove;
 	new.ltime = time;
-	new.nextthink = time + 10 + random()*10;
+	new.nextthink = time + 60 + random()*10;	// gibs live longer
 	new.frame = 0;
 	new.flags = 0;
 };
@@ -500,6 +500,8 @@ void() GibPlayer =
 	ThrowGib ("progs/gib1.mdl", self.health);
 	ThrowGib ("progs/gib2.mdl", self.health);
 	ThrowGib ("progs/gib3.mdl", self.health);
+	ThrowGib ("progs/gib1.mdl", self.health+5);	// more gibs
+	ThrowGib ("progs/gib2.mdl", self.health+5);	// because why not?
 
 	self.deadflag = DEAD_DEAD;
 

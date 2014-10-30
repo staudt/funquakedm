@@ -41,7 +41,7 @@ void() W_FireAxe =
 
 	makevectors (self.v_angle);
 	source = self.origin + '0 0 16';
-	traceline (source, source + v_forward*64, FALSE, self);
+	traceline (source, source + v_forward*78, FALSE, self);	// better reach
 	if (trace_fraction == 1.0)
 		return;
 	
@@ -50,8 +50,8 @@ void() W_FireAxe =
 	if (trace_ent.takedamage)
 	{
 		trace_ent.axhitme = 1;
-		SpawnBlood (org, '0 0 0', 20);
-		T_Damage (trace_ent, self, self, 20);
+		SpawnBlood (org, '0 0 0', 60);
+		T_Damage (trace_ent, self, self, 55);	// stronger
 	}
 	else
 	{	// hit wall
@@ -104,7 +104,7 @@ void(vector org, vector vel) SpawnMeatSpray =
 	missile.avelocity = '3000 1000 2000';
 	
 // set missile duration
-	missile.nextthink = time + 1;
+	missile.nextthink = time + 2;
 	missile.think = SUB_Remove;
 
 	setmodel (missile, "progs/zom_gib.mdl");
@@ -272,7 +272,7 @@ void() W_FireShotgun =
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
 	dir = aim (self, 100000);
-	FireBullets (6, dir, '0.04 0.04 0');
+	FireBullets (14, dir, '0.04 0.04 0');
 };
 
 
@@ -297,7 +297,7 @@ void() W_FireSuperShotgun =
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
 	dir = aim (self, 100000);
-	FireBullets (14, dir, '0.14 0.08 0');
+	FireBullets (30, dir, '0.14 0.08 0');
 };
 
 
@@ -507,7 +507,7 @@ void() W_FireLightning =
 	WriteCoord (MSG_BROADCAST, trace_endpos_y);
 	WriteCoord (MSG_BROADCAST, trace_endpos_z);
 
-	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 300); // 300 damage for instagib
+	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 120); // damage for almost-always instakill
 };
 
 
@@ -582,10 +582,10 @@ void() W_FireGrenade =
 	missile.touch = GrenadeTouch;
 	
 // set missile duration
-	missile.nextthink = time + 2.5;
+	missile.nextthink = time + 2.0;		//faster explosion
 	missile.think = GrenadeExplode;
 
-	setmodel (missile, "progs/grenade.mdl");
+	setmodel (missile, "progs/missile.mdl");
 	setsize (missile, '0 0 0', '0 0 0');		
 	setorigin (missile, self.origin);
 };

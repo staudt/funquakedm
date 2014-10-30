@@ -379,8 +379,9 @@ local vector	org;
 	}
 
 // only teleport living creatures
-	if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
-		return;
+	/*if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
+		return;*/
+	// This should teleport anything
 
 	SUB_UseTargets ();
 

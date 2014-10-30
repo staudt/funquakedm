@@ -1375,6 +1375,6 @@ void() DropBackpack =
 	setsize (item, '-16 -16 0', '16 16 56');
 	item.touch = BackpackTouch;
 	
-	item.nextthink = time + 120;	// remove after 2 minutes
+	item.nextthink = time + 360;	// remove after 6 minutes
 	item.think = SUB_Remove;
 };
