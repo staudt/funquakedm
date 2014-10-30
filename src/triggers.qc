@@ -364,6 +364,16 @@ void() teleport_touch =
 local entity	t;
 local vector	org;
 
+    if (other.teleport_time > time) return;  // Can't teleport before time is up
+
+    if ( (other.classname != "missile") && (other.classname != "grenade") &&
+         (other.classname != "player") && (other.classname != "spike") &&
+         (other.classname != "gib") && (other.classname != "weapon_supershotgun") &&    
+         (other.classname != "weapon_grenadelauncher") && (other.classname != "weapon_supernailgun") &&
+         (other.classname != "weapon_nailgun") && (other.classname != "weapon_lightning") &&
+         (other.classname != "weapon_rocketlauncher") && (other.classname != "") )
+            return;
+
 	if (self.targetname)
 	{
 		if (self.nextthink < time)
@@ -372,16 +382,20 @@ local vector	org;
 		}
 	}
 
-	if (self.spawnflags & PLAYER_ONLY)
+	/*if (self.spawnflags & PLAYER_ONLY)
 	{
 		if (other.classname != "player")
 			return;
-	}
+	}*/
 
 // only teleport living creatures
 	/*if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
 		return;*/
-	// This should teleport anything
+
+    if ((other.health <= 0) && (other.solid == SOLID_NOT))
+            return;
+    if (other.classname == "trigger_teleport")
+            return;
 
 	SUB_UseTargets ();
 
@@ -396,14 +410,21 @@ local vector	org;
 	makevectors (t.mangle);
 	org = t.origin + 32 * v_forward;
 
-	spawn_tfog (org);
-	spawn_tdeath(t.origin, other);
+    if (other.classname == "player")
+    {
+            spawn_tfog (org);
+            spawn_tdeath(t.origin, other);
+    } 
 
 // move the player and lock him down for a little while
 	if (!other.health)
 	{
 		other.origin = t.origin;
-		other.velocity = (v_forward * other.velocity_x) + (v_forward * other.velocity_y);
+		//other.velocity = (v_forward * other.velocity_x) + (v_forward * other.velocity_y);
+		if (other.velocity_y < 0) other.velocity_y = other.velocity_y * -1;
+        other.fixangle = 1;             // turn this way immediately
+        other.teleport_time = time + 0.7;
+        other.angles = t.mangle;
 		return;
 	}
 
@@ -451,6 +472,7 @@ void() trigger_teleport =
 	local vector o;
 
 	InitTrigger ();
+	self.flags = self.flags | FL_ITEM;     // Make it a big target to stuff to teleport
 	self.touch = teleport_touch;
 	// find the destination 
 	if (!self.target)
