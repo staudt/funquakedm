@@ -2,3 +2,7 @@ id1
 fteqw*
 linux32-fteqcc*
 conhistory*
+*.log
+progs.dat
+progs.lno
+
