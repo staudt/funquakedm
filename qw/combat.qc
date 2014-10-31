@@ -234,7 +234,6 @@ void(entity targ, entity inflictor, entity attacker, float damage) T_Damage=
 		
 // do the damage
 	targ.health = targ.health - take;
-
 	if (targ.health <= 0)
 	{
 		Killed (targ, attacker);

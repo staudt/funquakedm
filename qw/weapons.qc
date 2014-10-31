@@ -79,7 +79,7 @@ void() W_FireAxe =
 		if (deathmatch > 3)
 			T_Damage (trace_ent, self, self, 75);
 		else
-			T_Damage (trace_ent, self, self, 20);
+			T_Damage (trace_ent, self, self, 65);	// more damage
 	}
 	else
 	{       // hit wall
@@ -333,7 +333,7 @@ void() W_FireShotgun =
 		self.currentammo = self.ammo_shells = self.ammo_shells - 1;
 
 	dir = aim (self, 100000);
-	FireBullets (6, dir, '0.04 0.04 0');
+	FireBullets (14, dir, '0.04 0.04 0');	// much stronger (but slower)
 };
 
 
@@ -360,7 +360,7 @@ void() W_FireSuperShotgun =
 	if (deathmatch != 4)
 		self.currentammo = self.ammo_shells = self.ammo_shells - 2;
 	dir = aim (self, 100000);
-	FireBullets (14, dir, '0.14 0.08 0');
+	FireBullets (26, dir, '0.14 0.08 0');	// let's just boost it
 };
 
 
@@ -608,7 +608,7 @@ void() W_FireLightning =
 	WriteCoord (MSG_MULTICAST, trace_endpos_z);
 	multicast (org, MULTICAST_PHS);
 
-	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 120);	// near instakill
+	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 110);	// near instakill
 };
 
 
@@ -1433,3 +1433,14 @@ void() SuperDamageSound =
 };
 
 
+/*
+========
+Bleeding
+
+Dude bleeds when on low health
+========
+*/
+void(entity org) Bleeding =
+{
+        SpawnBlood (org.origin, 70); // make the blood
+};

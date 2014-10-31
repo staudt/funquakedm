@@ -4,6 +4,7 @@ Tutorials: http://www.inside3d.com/qctut/
 Examples: http://www.gamers.org/pub/idgames2/quakec/
 
 Todos:
+- make gibs, dead players, heads kickable (http://www.inside3d.com/qctut/lesson-52.shtml)
 - Bots?
 - Admin commands:
 	- Jump/switch level w/o killing the server
@@ -15,8 +16,9 @@ Todos:
 	Axe: Stronger, Stun effect / (Grappling hook?) http://www.inside3d.com/qctut/qctut-78.shtml
 	Shotgun: Slow but stronger shot / Slower double shot
 	Machine Gun: Fast shots / (Driller?)
-	Rocket Launcher: Rocket / Contact Grenade
+	Rocket Launcher: Rocket / Stick Grenade
 	Lasergun: Slow instagib discharge / Shield?
+	Druken rockets: fire multiple druken rockets (http://www.inside3d.com/qctut/qctut-75.shtml)
 
 ---
 other weapon ideas:

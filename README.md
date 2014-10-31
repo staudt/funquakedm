@@ -12,3 +12,4 @@ Current Features
 ================
  * You can now shoot thru teleports (credit: http://www.inside3d.com/qctut/lesson-24.shtml)
  * Grenades stick to walls and ground
+ * Player bleeds when near death (< 20 health)
