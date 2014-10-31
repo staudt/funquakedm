@@ -643,9 +643,17 @@ void() GrenadeTouch =
 		GrenadeExplode();
 		return;
 	}
-	sound (self, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM);  // bounce sound
-	if (self.velocity == '0 0 0')
-		self.avelocity = '0 0 0';
+	//sound (self, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM);  // bounce sound
+	sound (self,CHAN_WEAPON,"misc/outwater.wav", TRUE, ATTN_NORM); // stick sound
+	//if (self.velocity == '0 0 0')
+	//	self.avelocity = '0 0 0';
+	
+	// is this necessary? (below)
+	//self.think = GlueStick;
+	//self.nextthink = (time + 0.100); 
+	self.avelocity = VEC_ORIGIN;
+	self.velocity = (self.velocity * 0);
+	//self.enemy = other;	
 };
 
 /*
@@ -692,13 +700,13 @@ void() W_FireGrenade =
 // set newmis duration
 	if (deathmatch == 4)
 	{
-		newmis.nextthink = time + 2.5;		
+		newmis.nextthink = time + 2.0;		
 		self.attack_finished = time + 1.1;
 //		self.health = self.health - 1;
 		T_Damage (self, self, self.owner, 10 );
 	}
 	else
-		newmis.nextthink = time + 2.5;
+		newmis.nextthink = time + 2.0;	// faster explosion
 
 	newmis.think = GrenadeExplode;
 
