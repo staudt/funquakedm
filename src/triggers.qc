@@ -364,6 +364,27 @@ void() teleport_touch =
 local entity	t;
 local vector	org;
 
+/*
+This is added:
+*/
+	if (other.teleport_time > time) return;  // Can't teleport before time is up
+
+	if ( (other.classname != "missile") && (other.classname != "grenade") &&
+		(other.classname != "player") && (other.classname != "spike") &&
+		(other.classname != "gib") && (other.classname != "weapon_supershotgun") &&    
+		(other.classname != "weapon_grenadelauncher") && (other.classname != "weapon_supernailgun") &&
+		(other.classname != "weapon_nailgun") && (other.classname != "weapon_lightning") &&
+		(other.classname != "weapon_rocketlauncher") && (other.classname != "") )
+	    return;
+/*
+^-- Keeps things that spawn near the teleporter from teleporting..
+This is a BAD thing to have happen :(
+If you use this in a TC or something, just add any new classnames you make up
+there..
+*/
+
+/* That parts done */
+
 	if (self.targetname)
 	{
 		if (self.nextthink < time)
@@ -372,20 +393,28 @@ local vector	org;
 		}
 	}
 
-	if (self.spawnflags & PLAYER_ONLY)
-	{
-		if (other.classname != "player")
-			return;
-	}
+/*
+        if (self.spawnflags & PLAYER_ONLY)
+        {
+                if (other.classname != "player")
+                        return;
+        }
 
+*/
 // only teleport living creatures
-	if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
-		return;
+// if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
+//                return;
+// Allowing teleporting of non-living objects!
+    if ((other.health <= 0) && (other.solid == SOLID_NOT))
+            return;
+    if (other.classname == "trigger_teleport")
+            return;
 
 	SUB_UseTargets ();
 
 // put a tfog where the player was
-	spawn_tfog (other.origin);
+    //if (other.classname == "player")
+            spawn_tfog (other.origin);
 
 	t = find (world, targetname, self.target);
 	if (!t)
@@ -395,30 +424,44 @@ local vector	org;
 	makevectors (t.mangle);
 	org = t.origin + 32 * v_forward;
 
-	spawn_tfog (org);
-	spawn_tdeath(t.origin, other);
+/*
+Lets not allow telefragging with nails/rockets/grenades :)
+*/
+    if (other.classname == "player")
+    {
+            spawn_tfog (org);
+            spawn_tdeath(t.origin, other);
+    } 
 
 // move the player and lock him down for a little while
 	if (!other.health)
 	{
 		other.origin = t.origin;
-		other.velocity = (v_forward * other.velocity_x) + (v_forward * other.velocity_y);
+/*
+For right speed and angle of teleported things..
+*/
+//    other.velocity = (v_forward * other.velocity_x) + (v_forward * other.velocity_y);
+//    other.velocity = v_forward * 600;
+		if (other.velocity_y < 0) other.velocity_y = other.velocity_y * -1;
+                other.fixangle = 1;             // turn this way immediately
+                other.teleport_time = time + 0.7;
+                other.angles = t.mangle;
 		return;
 	}
-
 	setorigin (other, t.origin);
 	other.angles = t.mangle;
+
 	if (other.classname == "player")
 	{
 		other.fixangle = 1;		// turn this way immediately
 		other.teleport_time = time + 0.7;
+
 		if (other.flags & FL_ONGROUND)
 			other.flags = other.flags - FL_ONGROUND;
 		other.velocity = v_forward * 300;
 	}
 	other.flags = other.flags - other.flags & FL_ONGROUND;
 };
-
 /*QUAKED info_teleport_destination (.5 .5 .5) (-8 -8 -8) (8 8 32)
 This is the destination marker for a teleporter.  It should have a "targetname" field with the same value as a teleporter's "target" field.
 */
@@ -450,6 +493,7 @@ void() trigger_teleport =
 	local vector o;
 
 	InitTrigger ();
+	self.flags = self.flags | FL_ITEM; // make teleport a big target
 	self.touch = teleport_touch;
 	// find the destination 
 	if (!self.target)
