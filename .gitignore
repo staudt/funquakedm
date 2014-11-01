@@ -6,3 +6,6 @@ conhistory*
 progs.lno
 progs.dat
 quake/
+build.sh
+run.sh
+
