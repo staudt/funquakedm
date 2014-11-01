@@ -1,29 +1,3 @@
-/*
-	world.qc
-
-	main/world setup functions
-
-	Copyright (C) 1996-1997  Id Software, Inc.
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-	See the GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to:
-
-		Free Software Foundation, Inc.
-		59 Temple Place - Suite 330
-		Boston, MA  02111-1307, USA
-
-*/
 
 void() InitBodyQue;
 
@@ -181,7 +155,7 @@ void() main =
 };
 
 
-entity  lastspawn;
+entity	lastspawn;
 
 //=======================
 /*QUAKED worldspawn (0 0 0) ?
@@ -201,53 +175,51 @@ void() worldspawn =
 	InitBodyQue ();
 
 // custom map attributes
-
 	if (self.model == "maps/e1m8.bsp")
 		cvar_set ("sv_gravity", "100");
 	else
 		cvar_set ("sv_gravity", "800");
 
-
 // the area based ambient sounds MUST be the first precache_sounds
 
-// player precaches     
-	W_Precache ();                  // get weapon precaches
+// player precaches	
+	W_Precache ();			// get weapon precaches
 
 // sounds used from C physics code
-	precache_sound ("demon/dland2.wav");            // landing thud
-	precache_sound ("misc/h2ohit1.wav");            // landing splash
+	precache_sound ("demon/dland2.wav");		// landing thud
+	precache_sound ("misc/h2ohit1.wav");		// landing splash
 
 // setup precaches allways needed
-	precache_sound ("items/itembk2.wav");           // item respawn sound
-	precache_sound ("player/plyrjmp8.wav");         // player jump
-	precache_sound ("player/land.wav");                     // player landing
-	precache_sound ("player/land2.wav");            // player hurt landing
-	precache_sound ("player/drown1.wav");           // drowning pain
-	precache_sound ("player/drown2.wav");           // drowning pain
-	precache_sound ("player/gasp1.wav");            // gasping for air
-	precache_sound ("player/gasp2.wav");            // taking breath
-	precache_sound ("player/h2odeath.wav");         // drowning death
+	precache_sound ("items/itembk2.wav");		// item respawn sound
+	precache_sound ("player/plyrjmp8.wav");		// player jump
+	precache_sound ("player/land.wav");			// player landing
+	precache_sound ("player/land2.wav");		// player hurt landing
+	precache_sound ("player/drown1.wav");		// drowning pain
+	precache_sound ("player/drown2.wav");		// drowning pain
+	precache_sound ("player/gasp1.wav");		// gasping for air
+	precache_sound ("player/gasp2.wav");		// taking breath
+	precache_sound ("player/h2odeath.wav");		// drowning death
 
-	precache_sound ("misc/talk.wav");                       // talk
-	precache_sound ("player/teledth1.wav");         // telefrag
-	precache_sound ("misc/r_tele1.wav");            // teleport sounds
+	precache_sound ("misc/talk.wav");			// talk
+	precache_sound ("player/teledth1.wav");		// telefrag
+	precache_sound ("misc/r_tele1.wav");		// teleport sounds
 	precache_sound ("misc/r_tele2.wav");
 	precache_sound ("misc/r_tele3.wav");
 	precache_sound ("misc/r_tele4.wav");
 	precache_sound ("misc/r_tele5.wav");
-	precache_sound ("weapons/lock4.wav");           // ammo pick up
-	precache_sound ("weapons/pkup.wav");            // weapon up
-	precache_sound ("items/armor1.wav");            // armor up
-	precache_sound ("weapons/lhit.wav");            //lightning
-	precache_sound ("weapons/lstart.wav");          //lightning start
+	precache_sound ("weapons/lock4.wav");		// ammo pick up
+	precache_sound ("weapons/pkup.wav");		// weapon up
+	precache_sound ("items/armor1.wav");		// armor up
+	precache_sound ("weapons/lhit.wav");		//lightning
+	precache_sound ("weapons/lstart.wav");		//lightning start
 	precache_sound ("items/damage3.wav");
 
-	precache_sound ("misc/power.wav");                      //lightning for boss
+	precache_sound ("misc/power.wav");			//lightning for boss
 
 // player gib sounds
-	precache_sound ("player/gib.wav");                      // player gib sound
-	precache_sound ("player/udeath.wav");           // player gib sound
-	precache_sound ("player/tornoff2.wav");         // gib sound
+	precache_sound ("player/gib.wav");			// player gib sound
+	precache_sound ("player/udeath.wav");		// player gib sound
+	precache_sound ("player/tornoff2.wav");		// gib sound
 
 // player pain sounds
 
@@ -265,30 +237,22 @@ void() worldspawn =
 	precache_sound ("player/death4.wav");
 	precache_sound ("player/death5.wav");
 
-	precache_sound ("boss1/sight1.wav");
+// ax sounds	
+	precache_sound ("weapons/ax1.wav");			// ax swoosh
+	precache_sound ("player/axhit1.wav");		// ax hit meat
+	precache_sound ("player/axhit2.wav");		// ax hit world
 
-// ax sounds    
-	precache_sound ("weapons/ax1.wav");                     // ax swoosh
-	precache_sound ("player/axhit1.wav");           // ax hit meat
-	precache_sound ("player/axhit2.wav");           // ax hit world
+	precache_sound ("player/h2ojump.wav");		// player jumping into water
+	precache_sound ("player/slimbrn2.wav");		// player enter slime
+	precache_sound ("player/inh2o.wav");		// player enter water
+	precache_sound ("player/inlava.wav");		// player enter lava
+	precache_sound ("misc/outwater.wav");		// leaving water sound
 
-	precache_sound ("player/h2ojump.wav");          // player jumping into water
-	precache_sound ("player/slimbrn2.wav");         // player enter slime
-	precache_sound ("player/inh2o.wav");            // player enter water
-	precache_sound ("player/inlava.wav");           // player enter lava
-	precache_sound ("misc/outwater.wav");           // leaving water sound
+	precache_sound ("player/lburn1.wav");		// lava burn
+	precache_sound ("player/lburn2.wav");		// lava burn
 
-	precache_sound ("player/lburn1.wav");           // lava burn
-	precache_sound ("player/lburn2.wav");           // lava burn
-
-	precache_sound ("misc/water1.wav");                     // swimming
-	precache_sound ("misc/water2.wav");                     // swimming
-
-// Invulnerability sounds
-	precache_sound ("items/protect.wav");
-	precache_sound ("items/protect2.wav");
-	precache_sound ("items/protect3.wav");
-
+	precache_sound ("misc/water1.wav");			// swimming
+	precache_sound ("misc/water2.wav");			// swimming
 
 	precache_model ("progs/player.mdl");
 	precache_model ("progs/eyes.mdl");
@@ -297,8 +261,8 @@ void() worldspawn =
 	precache_model ("progs/gib2.mdl");
 	precache_model ("progs/gib3.mdl");
 
-	precache_model ("progs/s_bubble.spr");  // drowning bubbles
-	precache_model ("progs/s_explod.spr");  // sprite explosion
+	precache_model ("progs/s_bubble.spr");	// drowning bubbles
+	precache_model ("progs/s_explod.spr");	// sprite explosion
 
 	precache_model ("progs/v_axe.mdl");
 	precache_model ("progs/v_shot.mdl");
@@ -308,10 +272,10 @@ void() worldspawn =
 	precache_model ("progs/v_nail2.mdl");
 	precache_model ("progs/v_rock2.mdl");
 
-	precache_model ("progs/bolt.mdl");              // for lightning gun
-	precache_model ("progs/bolt2.mdl");             // for lightning gun
-	precache_model ("progs/bolt3.mdl");             // for boss shock
-	precache_model ("progs/lavaball.mdl");  // for testing
+	precache_model ("progs/bolt.mdl");		// for lightning gun
+	precache_model ("progs/bolt2.mdl");		// for lightning gun
+	precache_model ("progs/bolt3.mdl");		// for boss shock
+	precache_model ("progs/lavaball.mdl");	// for testing
 	
 	precache_model ("progs/missile.mdl");
 	precache_model ("progs/grenade.mdl");
@@ -373,11 +337,8 @@ void() worldspawn =
 
 void() StartFrame =
 {
-	timelimit = cvar("timelimit") * 60;
-	fraglimit = cvar("fraglimit");
 	teamplay = cvar("teamplay");
-	deathmatch = cvar("deathmatch");
-	
+	skill = cvar("skill");
 	framecount = framecount + 1;
 };
 
@@ -389,16 +350,16 @@ BODY QUE
 ==============================================================================
 */
 
-entity  bodyque_head;
+entity	bodyque_head;
 
 void() bodyque =
-{       // just here so spawn functions don't complain after the world
+{	// just here so spawn functions don't complain after the world
 	// creates bodyques
 };
 
 void() InitBodyQue =
 {
-	local entity    e;
+	local entity	e;
 	
 	bodyque_head = spawn();
 	bodyque_head.classname = "bodyque";

@@ -1,29 +1,3 @@
-/*
-	misc.qc
-
-	pretty much everything else
-
-	Copyright (C) 1996-1997  Id Software, Inc.
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-	See the GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to:
-
-		Free Software Foundation, Inc.
-		59 Temple Place - Suite 330
-		Boston, MA  02111-1307, USA
-
-*/
 
 /*QUAKED info_null (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for spotlights, etc.
@@ -67,7 +41,7 @@ If targeted, it will toggle between on or off.
 void() light =
 {
 	if (!self.targetname)
-	{       // inert light
+	{	// inert light
 		remove(self);
 		return;
 	}
@@ -207,7 +181,7 @@ void() misc_fireball =
 
 void() fire_fly =
 {
-local entity    fireball;
+local entity	fireball;
 
 	fireball = spawn();
 	fireball.solid = SOLID_TRIGGER;
@@ -243,14 +217,12 @@ void() barrel_explode =
 	self.takedamage = DAMAGE_NO;
 	self.classname = "explo_box";
 	// did say self.owner
-	T_RadiusDamage (self, self, 160, world, "");
-	WriteByte (MSG_MULTICAST, SVC_TEMPENTITY);
-	WriteByte (MSG_MULTICAST, TE_EXPLOSION);
-	WriteCoord (MSG_MULTICAST, self.origin_x);
-	WriteCoord (MSG_MULTICAST, self.origin_y);
-	WriteCoord (MSG_MULTICAST, self.origin_z+32);
-	multicast (self.origin, MULTICAST_PHS);
-	remove (self);
+	T_RadiusDamage (self, self, 160, world);
+	sound (self, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	particle (self.origin, '0 0 0', 75, 255);
+
+	self.origin_z = self.origin_z + 32;
+	BecomeExplosion ();
 };
 
 
@@ -261,13 +233,12 @@ TESTING THING
 
 void() misc_explobox =
 {
-	local float     oldz;
+	local float	oldz;
 	
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	precache_model ("maps/b_explob.bsp");
 	setmodel (self, "maps/b_explob.bsp");
-	setsize (self, '0 0 0', '32 32 64');
 	precache_sound ("weapons/r_exp3.wav");
 	self.health = 20;
 	self.th_die = barrel_explode;
@@ -294,13 +265,12 @@ Smaller exploding box, REGISTERED ONLY
 
 void() misc_explobox2 =
 {
-	local float     oldz;
+	local float	oldz;
 	
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	precache_model2 ("maps/b_exbox2.bsp");
 	setmodel (self, "maps/b_exbox2.bsp");
-	setsize (self, '0 0 0', '32 32 32');
 	precache_sound ("weapons/r_exp3.wav");
 	self.health = 20;
 	self.th_die = barrel_explode;
@@ -320,72 +290,10 @@ void() misc_explobox2 =
 
 //============================================================================
 
-float SPAWNFLAG_SUPERSPIKE      = 1;
+float SPAWNFLAG_SUPERSPIKE	= 1;
 float SPAWNFLAG_LASER = 2;
 
-void() Laser_Touch =
-{
-	local vector org;
-	
-	if (other == self.owner)
-		return;         // don't explode on owner
-
-	if (pointcontents(self.origin) == CONTENT_SKY)
-	{
-		remove(self);
-		return;
-	}
-	
-	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
-	org = self.origin - 8*normalize(self.velocity);
-
-	if (other.health)
-	{
-		SpawnBlood (org, 15);
-		other.deathtype = "laser";
-		T_Damage (other, self, self.owner, 15);
-	}
-	else
-	{
-		WriteByte (MSG_MULTICAST, SVC_TEMPENTITY);
-		WriteByte (MSG_MULTICAST, TE_GUNSHOT);
-		WriteByte (MSG_MULTICAST, 5);
-		WriteCoord (MSG_MULTICAST, org_x);
-		WriteCoord (MSG_MULTICAST, org_y);
-		WriteCoord (MSG_MULTICAST, org_z);
-		multicast (org, MULTICAST_PVS);
-	}
-	
-	remove(self);   
-};
-
-void(vector org, vector vec) LaunchLaser =
-{
-	local   vector  vec;
-		
-	if (self.classname == "monster_enforcer")
-		sound (self, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
-
-	vec = normalize(vec);
-	
-	newmis = spawn();
-	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLY;
-	newmis.solid = SOLID_BBOX;
-	newmis.effects = EF_DIMLIGHT;
-
-	setmodel (newmis, "progs/laser.mdl");
-	setsize (newmis, '0 0 0', '0 0 0');             
-
-	setorigin (newmis, org);
-
-	newmis.velocity = vec * 600;
-	newmis.angles = vectoangles(newmis.velocity);
-
-	newmis.nextthink = time + 5;
-	newmis.think = SUB_Remove;
-	newmis.touch = Laser_Touch;
-};
+void(vector org, vector vec) LaunchLaser;
 
 void() spikeshooter_use =
 {
@@ -468,13 +376,21 @@ testing air bubbles
 */
 
 void() air_bubbles =
+
 {
-	remove (self);
+	if (deathmatch)
+	{
+		remove (self);
+		return;
+	}
+	precache_model ("progs/s_bubble.spr");
+	self.nextthink = time + 1;
+	self.think = make_bubbles;
 };
 
 void() make_bubbles =
 {
-local entity    bubble;
+local entity	bubble;
 
 	bubble = spawn();
 	setmodel (bubble, "progs/s_bubble.spr");
@@ -495,7 +411,7 @@ local entity    bubble;
 
 void() bubble_split =
 {
-local entity    bubble;
+local entity	bubble;
 	bubble = spawn();
 	setmodel (bubble, "progs/s_bubble.spr");
 	setorigin (bubble, self.origin);
@@ -519,7 +435,7 @@ void() bubble_remove =
 {
 	if (other.classname == self.classname)
 	{
-//              dprint ("bump");
+//		dprint ("bump");
 		return;
 	}
 	remove(self);
@@ -527,8 +443,8 @@ void() bubble_remove =
 
 void() bubble_bob =
 {
-local float             rnd1, rnd2, rnd3;
-local vector    vtmp1, modi;
+local float		rnd1, rnd2, rnd3;
+local vector	vtmp1, modi;
 
 	self.cnt = self.cnt + 1;
 	if (self.cnt == 4)
@@ -590,7 +506,7 @@ SIMPLE BMODELS
 */
 
 void() func_wall_use =
-{       // change to alternate textures
+{	// change to alternate textures
 	self.frame = 1 - self.frame;
 };
 
@@ -600,7 +516,7 @@ This is just a solid wall if not inhibitted
 void() func_wall =
 {
 	self.angles = '0 0 0';
-	self.movetype = MOVETYPE_PUSH;  // so it doesn't get pushed by anything
+	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	self.solid = SOLID_BSP;
 	self.use = func_wall_use;
 	setmodel (self, self.model);
@@ -627,10 +543,10 @@ void() func_episodegate =
 
 {
 	if (!(serverflags & self.spawnflags))
-		return;                 // can still enter episode
+		return;			// can still enter episode
 
 	self.angles = '0 0 0';
-	self.movetype = MOVETYPE_PUSH;  // so it doesn't get pushed by anything
+	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	self.solid = SOLID_BSP;
 	self.use = func_wall_use;
 	setmodel (self, self.model);
@@ -643,9 +559,9 @@ void() func_bossgate =
 
 {
 	if ( (serverflags & 15) == 15)
-		return;         // all episodes completed
+		return;		// all episodes completed
 	self.angles = '0 0 0';
-	self.movetype = MOVETYPE_PUSH;  // so it doesn't get pushed by anything
+	self.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	self.solid = SOLID_BSP;
 	self.use = func_wall_use;
 	setmodel (self, self.model);

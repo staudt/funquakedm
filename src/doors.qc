@@ -1,29 +1,3 @@
-/*
-	doors.qc
-
-	door functions
-
-	Copyright (C) 1996-1997  Id Software, Inc.
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-	See the GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to:
-
-		Free Software Foundation, Inc.
-		59 Temple Place - Suite 330
-		Boston, MA  02111-1307, USA
-
-*/
 
 float DOOR_START_OPEN = 1;
 float DOOR_DONT_LINK = 4;
@@ -57,9 +31,8 @@ void() door_go_up;
 
 void() door_blocked =
 {
-	other.deathtype = "squish";
-	T_Damage (other, self, self.goalentity, self.dmg);
-
+	T_Damage (other, self, self, self.dmg);
+	
 // if a door has a negative wait, it would never come back if blocked,
 // so let it just squash the object to death real fast
 	if (self.wait >= 0)
@@ -74,17 +47,17 @@ void() door_blocked =
 
 void() door_hit_top =
 {
-	sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
 	self.state = STATE_TOP;
 	if (self.spawnflags & DOOR_TOGGLE)
-		return;         // don't come down automatically
+		return;		// don't come down automatically
 	self.think = door_go_down;
 	self.nextthink = self.ltime + self.wait;
 };
 
 void() door_hit_bottom =
 {
-	sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
 	self.state = STATE_BOTTOM;
 };
 
@@ -104,10 +77,10 @@ void() door_go_down =
 void() door_go_up =
 {
 	if (self.state == STATE_UP)
-		return;         // allready going up
+		return;		// allready going up
 
 	if (self.state == STATE_TOP)
-	{       // reset top wait time
+	{	// reset top wait time
 		self.nextthink = self.ltime + self.wait;
 		return;
 	}
@@ -130,8 +103,8 @@ ACTIVATION FUNCTIONS
 
 void() door_fire =
 {
-	local entity    oself;
-	local entity    starte;
+	local entity 	oself;
+	local entity	starte;
 
 	if (self.owner != self)
 		objerror ("door_fire: self.owner != self");
@@ -141,7 +114,7 @@ void() door_fire =
 	if (self.items)
 		sound (self, CHAN_VOICE, self.noise4, 1, ATTN_NORM);
 
-	self.message = string_null;             // no more message
+	self.message = string_null;		// no more message
 	oself = self;
 
 	if (self.spawnflags & DOOR_TOGGLE)
@@ -161,10 +134,8 @@ void() door_fire =
 	
 // trigger all paired doors
 	starte = self;
-	
 	do
 	{
-		self.goalentity = activator;		// Who fired us
 		door_go_up ();
 		self = self.enemy;
 	} while ( (self != starte) && (self != world) );
@@ -176,10 +147,9 @@ void() door_use =
 {
 	local entity oself;
 
-	self.message = "";                      // door message are for touch only
-	self.owner.message = "";        
+	self.message = "";			// door message are for touch only
+	self.owner.message = "";	
 	self.enemy.message = "";
-
 	oself = self;
 	self = self.owner;
 	door_fire ();
@@ -210,7 +180,7 @@ void() door_killed =
 	oself = self;
 	self = self.owner;
 	self.health = self.max_health;
-	self.takedamage = DAMAGE_NO;    // wil be reset upon return
+	self.takedamage = DAMAGE_NO;	// wil be reset upon return
 	door_use ();
 	self = oself;
 };
@@ -273,7 +243,7 @@ void() door_touch =
 			else if (world.worldtype == 1)
 			{
 				centerprint (other, "You need the gold runekey");
-				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);                    
+				sound (self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);			
 			}
 			else if (world.worldtype == 0)
 			{
@@ -287,7 +257,7 @@ void() door_touch =
 	other.items = other.items - self.items;
 	self.touch = SUB_Null;
 	if (self.enemy)
-		self.enemy.touch = SUB_Null;    // get paired door
+		self.enemy.touch = SUB_Null;	// get paired door
 	door_use ();
 };
 
@@ -302,8 +272,8 @@ SPAWNING FUNCTIONS
 
 entity(vector fmins, vector fmaxs) spawn_field =
 {
-	local entity    trigger;
-	local   vector  t1, t2;
+	local entity	trigger;
+	local	vector	t1, t2;
 
 	trigger = spawn();
 	trigger.movetype = MOVETYPE_NONE;
@@ -345,15 +315,15 @@ LinkDoors
 */
 void() LinkDoors =
 {
-	local entity    t, starte;
-	local vector    cmins, cmaxs;
+	local entity	t, starte;
+	local vector	cmins, cmaxs;
 
 	if (self.enemy)
-		return;         // already linked by another door
+		return;		// already linked by another door
 	if (self.spawnflags & 4)
 	{
 		self.owner = self.enemy = self;
-		return;         // don't want to link this door
+		return;		// don't want to link this door
 	}
 
 	cmins = self.mins;
@@ -364,7 +334,7 @@ void() LinkDoors =
 	
 	do
 	{
-		self.owner = starte;                    // master door
+		self.owner = starte;			// master door
 
 		if (self.health)
 			starte.health = self.health;
@@ -373,10 +343,10 @@ void() LinkDoors =
 		if (self.message != "")
 			starte.message = self.message;
 
-		t = find (t, classname, self.classname);        
+		t = find (t, classname, self.classname);	
 		if (!t)
 		{
-			self.enemy = starte;            // make the chain a loop
+			self.enemy = starte;		// make the chain a loop
 
 		// shootable, fired, or key doors just needed the owner/enemy links,
 		// they don't spawn a field
@@ -430,20 +400,20 @@ START_OPEN causes the door to move to its destination when spawned, and operate 
 
 Key doors are allways wait -1.
 
-"message"       is printed when the door is touched if it is a trigger door and it hasn't been fired yet
-"angle"         determines the opening direction
+"message"	is printed when the door is touched if it is a trigger door and it hasn't been fired yet
+"angle"		determines the opening direction
 "targetname" if set, no touch field will be spawned and a remote button or trigger field activates the door.
-"health"        if set, door must be shot open
-"speed"         movement speed (100 default)
-"wait"          wait before returning (3 default, -1 = never return)
-"lip"           lip remaining at end of move (8 default)
-"dmg"           damage to inflict when blocked (2 default)
+"health"	if set, door must be shot open
+"speed"		movement speed (100 default)
+"wait"		wait before returning (3 default, -1 = never return)
+"lip"		lip remaining at end of move (8 default)
+"dmg"		damage to inflict when blocked (2 default)
 "sounds"
-0)      no sound
-1)      stone
-2)      base
-3)      stone chain
-4)      screechy metal
+0)	no sound
+1)	stone
+2)	base
+3)	stone chain
+4)	screechy metal
 */
 
 void() func_door =
@@ -517,7 +487,7 @@ void() func_door =
 	self.max_health = self.health;
 	self.solid = SOLID_BSP;
 	self.movetype = MOVETYPE_PUSH;
-	setorigin (self, self.origin);  
+	setorigin (self, self.origin);	
 	setmodel (self, self.model);
 	self.classname = "door";
 
@@ -585,11 +555,11 @@ void() fd_secret_move5;
 void() fd_secret_move6;
 void() fd_secret_done;
 
-float SECRET_OPEN_ONCE = 1;             // stays open
-float SECRET_1ST_LEFT = 2;              // 1st move is left of arrow
-float SECRET_1ST_DOWN = 4;              // 1st move is down from arrow
-float SECRET_NO_SHOOT = 8;              // only opened by trigger
-float SECRET_YES_SHOOT = 16;    // shootable even if targeted
+float SECRET_OPEN_ONCE = 1;		// stays open
+float SECRET_1ST_LEFT = 2;		// 1st move is left of arrow
+float SECRET_1ST_DOWN = 4;		// 1st move is down from arrow
+float SECRET_NO_SHOOT = 8;		// only opened by trigger
+float SECRET_YES_SHOOT = 16;	// shootable even if targeted
 
 
 void () fd_secret_use =
@@ -602,9 +572,9 @@ void () fd_secret_use =
 	if (self.origin != self.oldorigin)
 		return;
 	
-	self.message = string_null;             // no more message
+	self.message = string_null;		// no more message
 
-	SUB_UseTargets();                               // fire all targets / killtargets
+	SUB_UseTargets();				// fire all targets / killtargets
 	
 	if (!(self.spawnflags & SECRET_NO_SHOOT))
 	{
@@ -618,7 +588,7 @@ void () fd_secret_use =
 	sound(self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
 	self.nextthink = self.ltime + 0.1;
 
-	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT); // 1 or -1
+	temp = 1 - (self.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
 	makevectors(self.mangle);
 	
 	if (!self.t_width)
@@ -672,7 +642,7 @@ void () fd_secret_move3 =
 void () fd_secret_move4 =
 {
 	sound(self, CHAN_VOICE, self.noise2, 1, ATTN_NORM);
-	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);          
+	SUB_CalcMove(self.dest1, self.speed, fd_secret_move5);		
 };
 
 // Wait 1 second...
@@ -695,10 +665,9 @@ void () fd_secret_done =
 	{
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
-		self.th_pain = fd_secret_use;   
-		self.th_die = fd_secret_use;
+		self.th_pain = fd_secret_use;	
 	}
-	sound(self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise3, 1, ATTN_NORM);
+	sound(self, CHAN_VOICE, self.noise3, 1, ATTN_NORM);
 };
 
 void () secret_blocked =
@@ -706,7 +675,6 @@ void () secret_blocked =
 	if (time < self.attack_finished)
 		return;
 	self.attack_finished = time + 0.5;
-	other.deathtype = "squish";
 	T_Damage (other, self, self, self.dmg);
 };
 
@@ -742,7 +710,7 @@ wait  = # of seconds before coming back
 always_shoot = even if targeted, keep shootable
 t_width = override WIDTH to move back (or height if going down)
 t_length = override LENGTH to move sideways
-"dmg"           damage to inflict when blocked (2 default)
+"dmg"		damage to inflict when blocked (2 default)
 
 If a secret door has a targetname, it will only be opened by it's botton or trigger, not by damage.
 "sounds"
@@ -791,7 +759,7 @@ void () func_door_secret =
 	self.movetype = MOVETYPE_PUSH;
 	self.classname = "door";
 	setmodel (self, self.model);
-	setorigin (self, self.origin);  
+	setorigin (self, self.origin);	
 	
 	self.touch = secret_touch;
 	self.blocked = secret_blocked;
@@ -802,8 +770,9 @@ void () func_door_secret =
 		self.health = 10000;
 		self.takedamage = DAMAGE_YES;
 		self.th_pain = fd_secret_use;
+		self.th_die = fd_secret_use;
 	}
 	self.oldorigin = self.origin;
 	if (!self.wait)
-		self.wait = 5;          // 5 seconds before closing
+		self.wait = 5;		// 5 seconds before closing
 };

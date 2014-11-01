@@ -1,29 +1,3 @@
-/*
-	triggers.qc
-
-	trigger functions
-
-	Copyright (C) 1996-1997  Id Software, Inc.
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-	See the GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to:
-
-		Free Software Foundation, Inc.
-		59 Temple Place - Suite 330
-		Boston, MA  02111-1307, USA
-
-*/
 
 entity stemp, otemp, s, old;
 
@@ -333,39 +307,26 @@ void(vector org) spawn_tfog =
 	s.nextthink = time + 0.2;
 	s.think = play_teleport;
 
-	WriteByte (MSG_MULTICAST, SVC_TEMPENTITY);
-	WriteByte (MSG_MULTICAST, TE_TELEPORT);
-	WriteCoord (MSG_MULTICAST, org_x);
-	WriteCoord (MSG_MULTICAST, org_y);
-	WriteCoord (MSG_MULTICAST, org_z);
-	multicast (org, MULTICAST_PHS);
+	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte (MSG_BROADCAST, TE_TELEPORT);
+	WriteCoord (MSG_BROADCAST, org_x);
+	WriteCoord (MSG_BROADCAST, org_y);
+	WriteCoord (MSG_BROADCAST, org_z);
 };
 
 
 void() tdeath_touch =
 {
-	local entity other2;
-
 	if (other == self.owner)
 		return;
 
 // frag anyone who teleports in on top of an invincible player
 	if (other.classname == "player")
 	{
-		if (other.invincible_finished > time &&
-			self.owner.invincible_finished > time) {
-			self.classname = "teledeath3";
-			other.invincible_finished = 0;
-			self.owner.invincible_finished = 0;
-			T_Damage (other, self, self, 50000);
-			other2 = self.owner;
-			self.owner = other;
-			T_Damage (other2, self, self, 50000);
-		}
-			
 		if (other.invincible_finished > time)
-		{
 			self.classname = "teledeath2";
+		if (self.owner.classname != "player")
+		{	// other monsters explode themselves
 			T_Damage (self.owner, self, self, 50000);
 			return;
 		}
@@ -403,16 +364,6 @@ void() teleport_touch =
 local entity	t;
 local vector	org;
 
-    if (other.teleport_time > time) return;  // Can't teleport before time is up
-
-    if ( (other.classname != "missile") && (other.classname != "grenade") &&
-         (other.classname != "player") && (other.classname != "spike") &&
-         (other.classname != "gib") && (other.classname != "weapon_supershotgun") &&    
-         (other.classname != "weapon_grenadelauncher") && (other.classname != "weapon_supernailgun") &&
-         (other.classname != "weapon_nailgun") && (other.classname != "weapon_lightning") &&
-         (other.classname != "weapon_rocketlauncher") && (other.classname != "") )
-            return;
-
 	if (self.targetname)
 	{
 		if (self.nextthink < time)
@@ -421,26 +372,20 @@ local vector	org;
 		}
 	}
 
-	/*if (self.spawnflags & PLAYER_ONLY)
+	if (self.spawnflags & PLAYER_ONLY)
 	{
 		if (other.classname != "player")
 			return;
-	}*/
+	}
 
 // only teleport living creatures
-	//if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
-		//return;
-
-    if ((other.health <= 0) && (other.solid == SOLID_NOT))
-            return;
-    if (other.classname == "trigger_teleport")
-            return;
+	if (other.health <= 0 || other.solid != SOLID_SLIDEBOX)
+		return;
 
 	SUB_UseTargets ();
 
 // put a tfog where the player was
-    if (other.classname == "player")
-        spawn_tfog (other.origin);
+	spawn_tfog (other.origin);
 
 	t = find (world, targetname, self.target);
 	if (!t)
@@ -450,22 +395,15 @@ local vector	org;
 	makevectors (t.mangle);
 	org = t.origin + 32 * v_forward;
 
-    if (other.classname == "player")
-    {
-            spawn_tfog (org);
-            spawn_tdeath(t.origin, other);
-    } 
+	spawn_tfog (org);
+	spawn_tdeath(t.origin, other);
 
 // move the player and lock him down for a little while
 	if (!other.health)
 	{
 		other.origin = t.origin;
-		//other.velocity = (v_forward * other.velocity_x) + (v_forward * other.velocity_y);
-		if (other.velocity_y < 0) other.velocity_y = other.velocity_y * -1;
-        other.fixangle = 1;             // turn this way immediately
-        other.teleport_time = time + 0.7;
-        other.angles = t.mangle;
-        return;
+		other.velocity = (v_forward * other.velocity_x) + (v_forward * other.velocity_y);
+		return;
 	}
 
 	setorigin (other, t.origin);
@@ -512,7 +450,6 @@ void() trigger_teleport =
 	local vector o;
 
 	InitTrigger ();
-	self.flags = self.flags | FL_ITEM; // Make it a big teleport area
 	self.touch = teleport_touch;
 	// find the destination 
 	if (!self.target)
@@ -535,13 +472,22 @@ trigger_setskill
 ==============================================================================
 */
 
+void() trigger_skill_touch =
+{
+	if (other.classname != "player")
+		return;
+		
+	cvar_set ("skill", self.message);
+};
+
 /*QUAKED trigger_setskill (.5 .5 .5) ?
 sets skill level to the value of "message".
 Only used on start map.
 */
 void() trigger_setskill =
 {
-	remove (self);
+	InitTrigger ();
+	self.touch = trigger_skill_touch;
 };
 
 

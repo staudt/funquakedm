@@ -1,29 +1,3 @@
-/*
-	plats.qc
-
-	platform functions
-
-	Copyright (C) 1996-1997  Id Software, Inc.
-
-	This program is free software; you can redistribute it and/or
-	modify it under the terms of the GNU General Public License
-	as published by the Free Software Foundation; either version 2
-	of the License, or (at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-	See the GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to:
-
-		Free Software Foundation, Inc.
-		59 Temple Place - Suite 330
-		Boston, MA  02111-1307, USA
-
-*/
 
 
 void() plat_center_touch;
@@ -70,7 +44,7 @@ void() plat_spawn_inside_trigger =
 
 void() plat_hit_top =
 {
-	sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
 	self.state = STATE_TOP;
 	self.think = plat_go_down;
 	self.nextthink = self.ltime + 3;
@@ -78,7 +52,7 @@ void() plat_hit_top =
 
 void() plat_hit_bottom =
 {
-	sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise1, 1, ATTN_NORM);
+	sound (self, CHAN_VOICE, self.noise1, 1, ATTN_NORM);
 	self.state = STATE_BOTTOM;
 };
 
@@ -137,7 +111,6 @@ void() plat_crush =
 {
 //dprint ("plat_crush\n");
 
-	other.deathtype = "squish";
 	T_Damage (other, self, self, 1);
 	
 	if (self.state == STATE_UP)
@@ -250,10 +223,8 @@ void() train_blocked =
 	if (time < self.attack_finished)
 		return;
 	self.attack_finished = time + 0.5;
-	other.deathtype = "squish";
 	T_Damage (other, self, self, self.dmg);
 };
-
 void() train_use =
 {
 	if (self.think != func_train_find)
@@ -266,7 +237,7 @@ void() train_wait =
 	if (self.wait)
 	{
 		self.nextthink = self.ltime + self.wait;
-		sound (self, CHAN_NO_PHS_ADD+CHAN_VOICE, self.noise, 1, ATTN_NORM);
+		sound (self, CHAN_VOICE, self.noise, 1, ATTN_NORM);
 	}
 	else
 		self.nextthink = self.ltime + 0.1;

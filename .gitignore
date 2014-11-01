@@ -3,6 +3,6 @@ fteqw*
 linux64-fteqcc*
 conhistory*
 *.log
-progs.dat
 progs.lno
-
+progs.dat
+quake/
