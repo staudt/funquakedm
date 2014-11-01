@@ -915,6 +915,11 @@ void() PlayerPreThink =
 	CheckRules ();
 	WaterMove ();
 
+	if (self.health <= 20)
+	{
+		Bleeding(self);
+	}
+
 	if (self.waterlevel == 2)
 		CheckWaterJump ();
 

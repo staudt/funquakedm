@@ -1290,3 +1290,14 @@ void() SuperDamageSound =
 };
 
 
+/*
+========
+Bleeding
+
+When player is low on health, he bleeds
+========
+*/
+void(entity org) Bleeding =
+{
+        SpawnBlood (org.origin, '0 0 0', 70); // make the blood
+};
