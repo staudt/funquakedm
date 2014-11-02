@@ -200,7 +200,12 @@ void() player_nail2   =[$nailatt2, player_nail1  ]
 
 //============================================================================
 
-void() player_light1   =[$light1, player_light2  ] 
+void() player_light1   =[$light1, player_light2  ]  {self.weaponframe = 1;
+self.effects = self.effects | EF_MUZZLEFLASH;};
+void() player_light2   =[$light2, player_run  ] { self.weaponframe = 3;
+self.effects = self.effects | EF_MUZZLEFLASH; };
+
+/*void() player_light1   =[$light1, player_light2  ] 
 {
 	self.effects = self.effects | EF_MUZZLEFLASH;
 
@@ -211,7 +216,7 @@ void() player_light1   =[$light1, player_light2  ]
 		self.weaponframe = 1;
 	SuperDamageSound();
 	W_FireLightning();
-	self.attack_finished = time + 0.2;
+	self.attack_finished = time + 1.6;
 };
 void() player_light2   =[$light2, player_light1  ]
 {
@@ -224,8 +229,8 @@ void() player_light2   =[$light2, player_light1  ]
 		self.weaponframe = 1;
 	SuperDamageSound();
 	W_FireLightning();
-	self.attack_finished = time + 0.2;
-};
+	self.attack_finished = time + 1.6;
+};*/
 
 //============================================================================
 

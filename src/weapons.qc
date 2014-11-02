@@ -41,7 +41,7 @@ void() W_FireAxe =
 
 	makevectors (self.v_angle);
 	source = self.origin + '0 0 16';
-	traceline (source, source + v_forward*64, FALSE, self);
+	traceline (source, source + v_forward*80, FALSE, self); //better reach
 	if (trace_fraction == 1.0)
 		return;
 	
@@ -50,8 +50,8 @@ void() W_FireAxe =
 	if (trace_ent.takedamage)
 	{
 		trace_ent.axhitme = 1;
-		SpawnBlood (org, '0 0 0', 20);
-		T_Damage (trace_ent, self, self, 20);
+		SpawnBlood (org, '0 0 0', 60);
+		T_Damage (trace_ent, self, self, 55);	// two hit kill
 	}
 	else
 	{	// hit wall
@@ -268,11 +268,11 @@ void() W_FireShotgun =
 
 	sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
 
-	self.punchangle_x = -2;
+	self.punchangle_x = -6;
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
 	dir = aim (self, 100000);
-	FireBullets (6, dir, '0.04 0.04 0');
+	FireBullets (14, dir, '0.04 0.04 0');	// stronger
 };
 
 
@@ -293,11 +293,11 @@ void() W_FireSuperShotgun =
 		
 	sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 
-	self.punchangle_x = -4;
+	self.punchangle_x = -12;
 	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
 	dir = aim (self, 100000);
-	FireBullets (14, dir, '0.14 0.08 0');
+	FireBullets (26, dir, '0.14 0.08 0');	// why not
 };
 
 
@@ -489,7 +489,7 @@ void() W_FireLightning =
 		sound (self, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);
 		self.t_width = time + 0.6;
 	}
-	self.punchangle_x = -2;
+	self.punchangle_x = -8;
 
 	self.currentammo = self.ammo_cells = self.ammo_cells - 1;
 
@@ -507,7 +507,7 @@ void() W_FireLightning =
 	WriteCoord (MSG_BROADCAST, trace_endpos_y);
 	WriteCoord (MSG_BROADCAST, trace_endpos_z);
 
-	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 30);
+	LightningDamage (self.origin, trace_endpos + v_forward*4, self, 110); //near instakill
 };
 
 
@@ -903,13 +903,13 @@ void() W_Attack =
 	{
 		player_shot1 ();
 		W_FireShotgun ();
-		self.attack_finished = time + 0.5;
+		self.attack_finished = time + 1.0;
 	}
 	else if (self.weapon == IT_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
 		W_FireSuperShotgun ();
-		self.attack_finished = time + 0.7;
+		self.attack_finished = time + 1.4;
 	}
 	else if (self.weapon == IT_NAILGUN)
 	{
@@ -934,7 +934,8 @@ void() W_Attack =
 	else if (self.weapon == IT_LIGHTNING)
 	{
 		player_light1();
-		self.attack_finished = time + 0.1;
+		W_FireLightning();
+		self.attack_finished = time + 1.6;
 		sound (self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
 };
@@ -1266,6 +1267,15 @@ void() W_WeaponFrame =
 	{
 		SuperDamageSound ();
 		W_Attack ();
+	}
+	else
+	{
+		if (self.weapon == IT_LIGHTNING)
+		{
+			self.weaponframe = self.weaponframe + 1;
+			if (self.weaponframe == 5)
+				self.weaponframe = 1;
+		}
 	}
 };
 
