@@ -219,27 +219,40 @@ void(entity inflictor, entity attacker, float damage, entity ignore) T_RadiusDam
 	
 	while (head)
 	{
-		if (head != ignore)
+		if (head.solid==SOLID_TRIGGER || head.solid==SOLID_NOT || head.solid==SOLID_BBOX)
 		{
-			if (head.takedamage)
+			//bprint(vtos(inflictor.maxs));
+			//bprint("\n");
+			org_x = (inflictor.velocity_x*2+50*random());	// this just random momentum
+			org_y = (inflictor.velocity_y*2+50*random());	// can be improved
+			org_z =250 + 160 * random()+(inflictor.velocity_y+inflictor.velocity_x)*0.30;
+			self.flags = self.flags - ( self.flags & FL_ONGROUND );
+			head.velocity = org;
+
+		}
+		else {
+			if (head != ignore)
 			{
-				org = head.origin + (head.mins + head.maxs)*0.5;
-				points = 0.5*vlen (inflictor.origin - org);
-				if (points < 0)
-					points = 0;
-				points = damage - points;
-				if (head == attacker)
-					points = points * 0.5;
-				if (points > 0)
+				if (head.takedamage)
 				{
-					if (CanDamage (head, inflictor))
-					{	// shambler takes half damage from all explosions
-						if (head.classname == "monster_shambler")						
-							T_Damage (head, inflictor, attacker, points*0.5);
-						else
-							T_Damage (head, inflictor, attacker, points);
+					org = head.origin + (head.mins + head.maxs)*0.5;
+					points = 0.5*vlen (inflictor.origin - org);
+					if (points < 0)
+						points = 0;
+					points = damage - points;
+					if (head == attacker)
+						points = points * 0.5;
+					if (points > 0)
+					{
+						if (CanDamage (head, inflictor))
+						{	// shambler takes half damage from all explosions
+							if (head.classname == "monster_shambler")						
+								T_Damage (head, inflictor, attacker, points*0.5);
+							else
+								T_Damage (head, inflictor, attacker, points);
+						}
 					}
-				}
+				} 
 			}
 		}
 		head = head.chain;

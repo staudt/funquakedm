@@ -1,5 +1,6 @@
 
 void() bubble_bob;
+void() kick_touch;
 
 /*
 ==============================================================================
@@ -466,13 +467,14 @@ void(string gibname, float dm) ThrowGib =
 	setsize (new, '0 0 0', '0 0 0');
 	new.velocity = VelocityForDamage (dm);
 	new.movetype = MOVETYPE_BOUNCE;
-	new.solid = SOLID_NOT;
+	self.solid = SOLID_TRIGGER;	//kickable
+	self.touch = kick_touch;
 	new.avelocity_x = random()*600;
 	new.avelocity_y = random()*600;
 	new.avelocity_z = random()*600;
 	new.think = SUB_Remove;
 	new.ltime = time;
-	new.nextthink = time + 10 + random()*10;
+	new.nextthink = time + 30 + random()*10;
 	new.frame = 0;
 	new.flags = 0;
 };
@@ -484,7 +486,8 @@ void(string gibname, float dm) ThrowHead =
 	self.nextthink = -1;
 	self.movetype = MOVETYPE_BOUNCE;
 	self.takedamage = DAMAGE_NO;
-	self.solid = SOLID_NOT;
+	self.solid = SOLID_TRIGGER;
+	self.touch = kick_touch;
 	self.view_ofs = '0 0 8';
 	setsize (self, '-16 -16 0', '16 16 56');
 	self.velocity = VelocityForDamage (dm);
@@ -657,3 +660,28 @@ void()	player_die_ax6	=	[	$axdeth6,	player_die_ax7	] {};
 void()	player_die_ax7	=	[	$axdeth7,	player_die_ax8	] {};
 void()	player_die_ax8	=	[	$axdeth8,	player_die_ax9	] {};
 void()	player_die_ax9	=	[	$axdeth9,	player_die_ax9	] {PlayerDead();};
+
+void() kick_touch = 
+{
+	local vector v;
+
+	// only a player can kick it
+	if (other.classname != "player")
+		return;
+
+	//randomize sound
+	if (random()< 0.8)
+		sound(other, CHAN_ITEM, "zombie/z_hit.wav", 1, ATTN_NORM);
+	else
+		sound(other, CHAN_ITEM, "zombie/z_miss.wav", 1, ATTN_NORM);
+
+	//define velocity 
+	//you can play with these formulas to adjust
+	//trajectory
+	v_x = (other.velocity_x*2+50*random());
+	v_y = (other.velocity_y*2+50*random());
+	v_z =250 + 160 * random()+(other.velocity_y+other.velocity_x)*0.30;
+
+	self.flags = self.flags - ( self.flags & FL_ONGROUND );
+	self.velocity = v;
+};
