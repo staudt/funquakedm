@@ -2,6 +2,17 @@ void() W_SetCurrentAmmo;
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
 
+void(entity item, entity dude) KickItem =
+{
+	local vector org;
+
+	org_x = (dude.velocity_x*2+30*random());	// this just random momentum
+	org_y = (dude.velocity_y*2+30*random());	// can be improved
+	org_z =250 + 160 * random()+(dude.velocity_y+dude.velocity_x)*0.30;
+	item.flags = item.flags - ( item.flags & FL_ONGROUND );
+	item.velocity = org;
+}
+
 
 void() SUB_regen =
 {
@@ -153,19 +164,31 @@ void() health_touch =
 	local	string	s;
 	
 	if (other.classname != "player")
+	{
+		//KickItem(self, other);
 		return;
+	}
 	
 	if (self.healtype == 2) // Megahealth?  Ignore max_health...
 	{
 		if (other.health >= 250)
+		{
+			KickItem(self, other);
 			return;
+		}
 		if (!T_Heal(other, self.healamount, 1))
+		{
+			KickItem(self, other);
 			return;
+		}
 	}
 	else
 	{
 		if (!T_Heal(other, self.healamount, 0))
+		{
+			KickItem(self, other);
 			return;
+		}
 	}
 	
 	sprint(other, "You receive ");
@@ -242,7 +265,10 @@ void() armor_touch =
 	if (other.health <= 0)
 		return;
 	if (other.classname != "player")
+	{
+		//KickItem(self, other);
 		return;
+	}
 
 	if (self.classname == "item_armor1")
 	{
@@ -263,7 +289,10 @@ void() armor_touch =
 		bit = IT_ARMOR3;
 	}
 	if (other.armortype*other.armorvalue >= type*value)
+	{
+		KickItem(self, other);
 		return;
+	}
 		
 	other.armortype = type;
 	other.armorvalue = value;
@@ -396,7 +425,10 @@ void() weapon_touch =
 	local	float	leave;
 
 	if (!(other.flags & FL_CLIENT))
+	{
+		//KickItem(self, other);
 		return;
+	}
 
 // if the player was using his best weapon, change up to the new one if better		
 	stemp = self;
@@ -412,7 +444,10 @@ void() weapon_touch =
 	if (self.classname == "weapon_nailgun")
 	{
 		if (leave && (other.items & IT_NAILGUN) )
+		{
+			KickItem(self, other);
 			return;
+		}
 		hadammo = other.ammo_nails;			
 		new = IT_NAILGUN;
 		other.ammo_nails = other.ammo_nails + 30;
@@ -420,7 +455,10 @@ void() weapon_touch =
 	else if (self.classname == "weapon_supernailgun")
 	{
 		if (leave && (other.items & IT_SUPER_NAILGUN) )
+		{
+			KickItem(self, other);
 			return;
+		}
 		hadammo = other.ammo_rockets;			
 		new = IT_SUPER_NAILGUN;
 		other.ammo_nails = other.ammo_nails + 30;
@@ -428,7 +466,10 @@ void() weapon_touch =
 	else if (self.classname == "weapon_supershotgun")
 	{
 		if (leave && (other.items & IT_SUPER_SHOTGUN) )
+		{
+			KickItem(self, other);
 			return;
+		}
 		hadammo = other.ammo_rockets;			
 		new = IT_SUPER_SHOTGUN;
 		other.ammo_shells = other.ammo_shells + 5;
@@ -436,7 +477,10 @@ void() weapon_touch =
 	else if (self.classname == "weapon_rocketlauncher")
 	{
 		if (leave && (other.items & IT_ROCKET_LAUNCHER) )
+		{
+			KickItem(self, other);
 			return;
+		}
 		hadammo = other.ammo_rockets;			
 		new = IT_ROCKET_LAUNCHER;
 		other.ammo_rockets = other.ammo_rockets + 5;
@@ -444,7 +488,10 @@ void() weapon_touch =
 	else if (self.classname == "weapon_grenadelauncher")
 	{
 		if (leave && (other.items & IT_GRENADE_LAUNCHER) )
+		{
+			KickItem(self, other);
 			return;
+		}
 		hadammo = other.ammo_rockets;			
 		new = IT_GRENADE_LAUNCHER;
 		other.ammo_rockets = other.ammo_rockets + 5;
@@ -452,7 +499,10 @@ void() weapon_touch =
 	else if (self.classname == "weapon_lightning")
 	{
 		if (leave && (other.items & IT_LIGHTNING) )
+		{
+			KickItem(self, other);
 			return;
+		}
 		hadammo = other.ammo_rockets;			
 		new = IT_LIGHTNING;
 		other.ammo_cells = other.ammo_cells + 15;
@@ -486,7 +536,10 @@ void() weapon_touch =
 	self = stemp;
 
 	if (leave)
+	{
+		KickItem(self, other);
 		return;
+	}
 
 // remove it in single player, or setup for respawning in deathmatch
 	self.model = string_null;
@@ -600,7 +653,10 @@ local entity	stemp;
 local float		best;
 
 	if (other.classname != "player")
+	{
+		//KickItem(self, other);
 		return;
+	}
 	if (other.health <= 0)
 		return;
 
@@ -615,7 +671,10 @@ local float		best;
 	if (self.weapon == 1)
 	{
 		if (other.ammo_shells >= 100)
+		{
+			KickItem(self, other);
 			return;
+		}
 		other.ammo_shells = other.ammo_shells + self.aflag;
 	}
 
@@ -623,7 +682,10 @@ local float		best;
 	if (self.weapon == 2)
 	{
 		if (other.ammo_nails >= 200)
+		{
+			KickItem(self, other);
 			return;
+		}
 		other.ammo_nails = other.ammo_nails + self.aflag;
 	}
 
@@ -631,7 +693,10 @@ local float		best;
 	if (self.weapon == 3)
 	{
 		if (other.ammo_rockets >= 100)
+		{
+			KickItem(self, other);
 			return;
+		}
 		other.ammo_rockets = other.ammo_rockets + self.aflag;
 	}
 
@@ -639,7 +704,10 @@ local float		best;
 	if (self.weapon == 4)
 	{
 		if (other.ammo_cells >= 100)
+		{
+			KickItem(self, other);
 			return;
+		}
 		other.ammo_cells = other.ammo_cells + self.aflag;
 	}
 
@@ -872,11 +940,17 @@ local entity	stemp;
 local float		best;
 
 	if (other.classname != "player")
+	{
+		//KickItem(self, other);
 		return;
+	}
 	if (other.health <= 0)
 		return;
 	if (other.items & self.items)
+	{
+		KickItem(self, other);
 		return;
+	}
 
 	sprint (other, "You got the ");
 	sprint (other, self.netname);
@@ -1081,7 +1155,10 @@ local entity	stemp;
 local float		best;
 
 	if (other.classname != "player")
+	{
+		//KickItem(self, other);
 		return;
+	}
 	if (other.health <= 0)
 		return;
 
@@ -1234,7 +1311,10 @@ void() BackpackTouch =
 	local	float	acount;
 	
 	if (other.classname != "player")
+	{
+		//KickItem(self, other);
 		return;
+	}
 	if (other.health <= 0)
 		return;
 
