@@ -268,11 +268,11 @@ void() W_FireShotgun =
 
 	sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
 
-	self.punchangle_x = -6;
+	self.punchangle_x = -2;
 	
-	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
+	self.currentammo = self.ammo_shells = self.ammo_shells - 0.5;
 	dir = aim (self, 100000);
-	FireBullets (14, dir, '0.04 0.04 0');	// stronger
+	FireBullets (4, dir, '0.04 0.04 0');
 };
 
 
@@ -281,23 +281,22 @@ void() W_FireShotgun =
 W_FireSuperShotgun
 ================
 */
-void() W_FireSuperShotgun =
+void(float shells) W_FireSuperShotgun =
 {
 	local vector dir;
 
 	if (self.currentammo == 1)
-	{
-		W_FireShotgun ();
-		return;
-	}
+		shells = 1;
 		
 	sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 
-	self.punchangle_x = -12;
-	
-	self.currentammo = self.ammo_shells = self.ammo_shells - 2;
+	self.punchangle_x = -(6 * shells);
+	self.currentammo = self.ammo_shells = self.ammo_shells - shells;
 	dir = aim (self, 100000);
-	FireBullets (26, dir, '0.14 0.08 0');	// why not
+	if (shells == 1)
+		FireBullets (14, dir, '0.04 0.04 0');
+	else
+		FireBullets (28, dir, '0.16 0.08 0');	// double shot (2 shells)
 };
 
 
@@ -838,7 +837,7 @@ float() W_BestWeapon =
 		return IT_SUPER_SHOTGUN;
 	if(self.ammo_nails >= 1 && (it & IT_NAILGUN) )
 		return IT_NAILGUN;
-	if(self.ammo_shells >= 1 && (it & IT_SHOTGUN) )
+	if(self.ammo_shells >= 0.2 && (it & IT_SHOTGUN) )
 		return IT_SHOTGUN;
 	return IT_AXE;
 };
@@ -903,13 +902,13 @@ void() W_Attack =
 	{
 		player_shot1 ();
 		W_FireShotgun ();
-		self.attack_finished = time + 1.0;
+		self.attack_finished = time + 0.3;
 	}
 	else if (self.weapon == IT_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
-		W_FireSuperShotgun ();
-		self.attack_finished = time + 1.4;
+		W_FireSuperShotgun (1);
+		self.attack_finished = time + 0.9;
 	}
 	else if (self.weapon == IT_NAILGUN)
 	{
@@ -959,11 +958,11 @@ void() W_Alt_Attack =
 	makevectors	(self.v_angle);		// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
 
-	if (self.weapon == IT_SHOTGUN)
+	if (self.weapon == IT_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
-		W_FireSuperShotgun ();
-		self.attack_finished = time + 1.4;
+		W_FireSuperShotgun (2);
+		self.attack_finished = time + 1.2;
 	}
 	else if (self.weapon == IT_ROCKET_LAUNCHER)
 	{
