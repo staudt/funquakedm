@@ -1218,7 +1218,7 @@ void() CheckMelee =
 		W_SetCurrentAmmo();
 	}
 
-	if (self.melee == TRUE)
+	if (self.melee == TRUE && time >= self.melee_time)
 	{
 		makevectors	(self.v_angle);
 		self.currentweapon = self.weapon;
@@ -1233,7 +1233,8 @@ void() CheckMelee =
 			player_axec1 ();
 		else
 			player_axed1 ();
-		self.attack_finished = time + 0.7;
+		self.attack_finished = time + 0.5;
+		self.melee_time = time + 0.9;
 	}
 	self.melee = FALSE;
 };

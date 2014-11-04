@@ -4,7 +4,6 @@ linux64-fteqcc*
 conhistory*
 *.log
 progs.lno
-progs.dat
 quake/
 build.sh
 build.bat

@@ -5,6 +5,7 @@ Examples: http://www.gamers.org/pub/idgames2/quakec/
 
 Todos:
 - Bots?
+- footstep sounds
 - Alternate weapon shot (http://www.inside3d.com/qctut/qctut-74.shtml)
 - Drop all weapons when dead
 - Gradually speeding rockets (http://www.inside3d.com/qctut/qctut-81.shtml)
@@ -15,7 +16,7 @@ Todos:
 	Rocket Launcher: Rocket / Stick Grenade
 	Lasergun: Slow instagib discharge / Shield?
 	Druken rockets: fire multiple druken rockets (http://www.inside3d.com/qctut/qctut-75.shtml)
-
+- Melee atack (CoD-like)
 ---
 other weapon ideas:
 	multi-grenades, chainsaw, landmines, homing missile

@@ -137,7 +137,8 @@ void		end_sys_globals;		// flag for structure dumping
 .float		frags;
 .float		weapon;			// one of the IT_SHOTGUN, etc flags
 .float		currentweapon;	// remembers the weapon after applying melee
-.float		melee;			// struck a melee attack
+.float		melee;			// throwing a melee attack
+.float      melee_time;		// after meleeing, you have to wait some time to do it again
 .string		weaponmodel;
 .float		weaponframe;
 .float		currentammo;
