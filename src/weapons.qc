@@ -882,7 +882,7 @@ void() W_Attack =
 	if (!W_CheckNoAmmo ())
 		return;
 
-	makevectors	(self.v_angle);			// calculate forward angle for velocity
+	makevectors	(self.v_angle);		// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
 
 	if (self.weapon == IT_AXE)
@@ -938,6 +938,40 @@ void() W_Attack =
 		self.attack_finished = time + 1.6;
 		sound (self, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
+};
+
+/*
+============
+W_Attack
+
+An attack impulse can be triggered now
+============
+*/
+void() W_Alt_Attack =
+{
+	local	float	r;
+
+	if (time < self.attack_finished) return; // already attacking
+
+	if (!W_CheckNoAmmo ())
+		return;
+	
+	makevectors	(self.v_angle);		// calculate forward angle for velocity
+	self.show_hostile = time + 1;	// wake monsters up
+
+	if (self.weapon == IT_SHOTGUN)
+	{
+		player_shot1 ();
+		W_FireSuperShotgun ();
+		self.attack_finished = time + 1.4;
+	}
+	else if (self.weapon == IT_ROCKET_LAUNCHER)
+	{
+		player_rocket1();
+		W_FireGrenade();
+		self.attack_finished = time + 0.6;
+	}
+
 };
 
 /*
@@ -1283,6 +1317,9 @@ void() ImpulseCommands =
 
 	if (self.impulse == 20)
 		self.melee = 1;
+	
+	if (self.impulse == 21)
+		self.alt_attack = 1;
 
 	if (self.impulse == 255)
 		QuadCheat ();
@@ -1299,26 +1336,31 @@ Called every frame so impulse events can be handled as well as possible
 */
 void() W_WeaponFrame =
 {
-	if (time < self.attack_finished)
-		return;
+	if (time < self.attack_finished) return;
 
 	ImpulseCommands ();
 	
 // check for attack
 	CheckMelee ();
+	if (time < self.attack_finished) return;
+	
 	if (self.button0)
 	{
 		SuperDamageSound ();
 		W_Attack ();
 	}
-	else
+	else if (self.alt_attack == 1)
 	{
-		if (self.weapon == IT_LIGHTNING)
-		{
-			self.weaponframe = self.weaponframe + 1;
-			if (self.weaponframe == 5)
-				self.weaponframe = 1;
-		}
+		W_Alt_Attack();	// alternate attack (2nd trigger)
+		self.alt_attack = 0;
+	}
+
+
+	if (self.weapon == IT_LIGHTNING)
+	{
+		self.weaponframe = self.weaponframe + 1;
+		if (self.weaponframe == 5)
+			self.weaponframe = 1;
 	}
 };
 

@@ -10,6 +10,8 @@ The compiler used to build this source is FTEQCC, which can be found here: http:
 
 Current Features
 ================
+ * Alternate fire for weapons. Every gun will have a secondary attack (IMPULSE 21)
+    * To assign it to the right click, type on the console: **/BIND MOUSE2 "IMPULSE 21"**
  * One-key CoD-like melee attack with the axe (IMPULSE 20)
     * To assign it to the Q key, type on the console: **/BIND Q "IMPULSE 20"**
  * You can now shoot grenades/missiles thru teleports

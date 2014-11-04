@@ -139,6 +139,7 @@ void		end_sys_globals;		// flag for structure dumping
 .float		currentweapon;	// remembers the weapon after applying melee
 .float		melee;			// throwing a melee attack
 .float      melee_time;		// after meleeing, you have to wait some time to do it again
+.float 		alt_attack;		// alternate attacking (secondary trigger)
 .string		weaponmodel;
 .float		weaponframe;
 .float		currentammo;
