@@ -7,5 +7,7 @@ progs.lno
 progs.dat
 quake/
 build.sh
+build.bat
 run.sh
-
+win64-fte*
+win32-fte*

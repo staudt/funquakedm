@@ -1202,6 +1202,44 @@ void() CycleWeaponReverseCommand =
 
 /*
 ============
+CheckMelee
+
+Checks and delivers a Melee attack
+============
+*/
+void() CheckMelee =
+{
+	local float r;
+
+	if (self.currentweapon != 0)
+	{
+		self.weapon = self.currentweapon;
+		self.currentweapon = 0;
+		W_SetCurrentAmmo();
+	}
+
+	if (self.melee == TRUE)
+	{
+		makevectors	(self.v_angle);
+		self.currentweapon = self.weapon;
+		self.weapon = IT_AXE;
+		W_SetCurrentAmmo();
+		r = random();
+		if (r < 0.25)
+			player_axe1 ();
+		else if (r<0.5)
+			player_axeb1 ();
+		else if (r<0.75)
+			player_axec1 ();
+		else
+			player_axed1 ();
+		self.attack_finished = time + 0.7;
+	}
+	self.melee = FALSE;
+};
+
+/*
+============
 ServerflagsCommand
 
 Just for development
@@ -1242,6 +1280,9 @@ void() ImpulseCommands =
 	if (self.impulse == 12)
 		CycleWeaponReverseCommand ();
 
+	if (self.impulse == 20)
+		self.melee = 1;
+
 	if (self.impulse == 255)
 		QuadCheat ();
 		
@@ -1263,6 +1304,7 @@ void() W_WeaponFrame =
 	ImpulseCommands ();
 	
 // check for attack
+	CheckMelee ();
 	if (self.button0)
 	{
 		SuperDamageSound ();
@@ -1311,3 +1353,4 @@ void(entity org) Bleeding =
 {
         SpawnBlood (org.origin, '0 0 0', 70); // make the blood
 };
+
