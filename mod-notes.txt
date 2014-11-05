@@ -3,6 +3,9 @@ QuakeC specs: http://www.inside3d.com/qcspecs/qc-menu.htm
 Tutorials: http://www.inside3d.com/qctut/
 Examples: http://www.gamers.org/pub/idgames2/quakec/
 
+To test:
+- monster drop backpack, players drop weapons
+
 Todos:
 - Bots?
 - footstep sounds

@@ -17,14 +17,14 @@ Current Features
  * You can now shoot grenades/missiles thru teleports
  * You kick away items you won't take, as well as heads
  * Items will fly away when caught on explosions (you can blow items away from enemies)
- * Players now drops all their weapons when they die (instead of a backpack)
+ * Players now drop all their weapons when they die (instead of a backpack)
  * Players bleeds when near death (< 20 health)
  * Weapons
    * Axe is much stronger (2 hits will kill a non-armored player)
-   * Lightning gun is now a single super strong bolt that takes a long time to charge
    * Super Shotgun:
-      * 1st trigger: 1 shell shot (similar to the regular shotgun, but stronger)
+      * 1st trigger: 1 shell shot (like the regular shotgun, slightly slower and stronger)
       * 2nd trigger: Double shell shot (stronger than the old super shotgun)
    * Rocket Launcher
-     * 1st trigger: Good ol' Missile
+     * 1st trigger: Good ol' Missile at short/mid range. Goes drunk at long range (like actual rockets)
      * 2nd trigger: Drops a Rocket like a grenade that explodes on contact
+   * Lightning gun is now a single super strong bolt that takes a long time to charge
