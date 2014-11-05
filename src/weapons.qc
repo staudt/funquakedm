@@ -370,15 +370,9 @@ void() T_MissileTouch =
 // Rocket goes drunk, going to random directions or exploding
 void() SUB_RocketDrunk =
 {
-	local float r;
-
     self.velocity = ((self.velocity + ((v_right * 121.000) * crandom ())) + ((v_up * 121.000) * crandom ()));
-    self.nextthink = time + 0.06;
-	r = random();
-	if (r < 0.1)	// explode at random (rarely)
-		self.think = T_MissileTouch;
-	else 
-		self.think = SUB_RocketDrunk;
+    self.nextthink = time + 0.08;
+	self.think = SUB_RocketDrunk;
 };
 
 /*
@@ -412,7 +406,7 @@ void() W_FireRocket =
 	missile.touch = T_MissileTouch;
 	
 // set missile duration
-	missile.nextthink = time + 0.5;
+	missile.nextthink = time + 0.4;
 	missile.think = SUB_RocketDrunk;
 
 	setmodel (missile, "progs/missile.mdl");
