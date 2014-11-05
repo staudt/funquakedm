@@ -1441,7 +1441,7 @@ void(float weapon) DropWeapon =
 	{
 		item.classname = "weapon_supernailgun";
 		item.netname = "Super Nailgun";
-		setmodel (item, "progs/g_.mdl");
+		setmodel (item, "progs/g_nail2.mdl");
 	}
 	else if (weapon == IT_ROCKET_LAUNCHER)
 	{

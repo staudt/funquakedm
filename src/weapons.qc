@@ -288,15 +288,19 @@ void(float shells) W_FireSuperShotgun =
 	if (self.currentammo == 1)
 		shells = 1;
 		
-	sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
-
 	self.punchangle_x = -(6 * shells);
 	self.currentammo = self.ammo_shells = self.ammo_shells - shells;
 	dir = aim (self, 100000);
 	if (shells == 1)
+	{
+		sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
 		FireBullets (14, dir, '0.04 0.04 0');
+	}
 	else
+	{
+		sound (self ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 		FireBullets (28, dir, '0.16 0.08 0');	// double shot (2 shells)
+	}
 };
 
 
@@ -403,6 +407,56 @@ void() W_FireRocket =
 	setsize (missile, '0 0 0', '0 0 0');		
 	setorigin (missile, self.origin + v_forward*8 + '0 0 16');
 };
+
+/*
+================
+W_FireDropRocket
+
+Secondary rocket shot, a grenade-like rocket that goes boom on impact
+================
+*/
+void() W_FireDropRocket =
+{
+	local	entity missile, mpuff;
+	
+	self.currentammo = self.ammo_rockets = self.ammo_rockets - 1;
+	
+	sound (self, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
+
+	self.punchangle_x = -4;
+
+	missile = spawn ();
+	missile.owner = self;
+	missile.movetype = MOVETYPE_BOUNCE;
+	missile.solid = SOLID_BBOX;
+	missile.classname = "grenade";
+		
+// set missile speed	
+
+	makevectors (self.v_angle);
+
+	if (self.v_angle_x)
+		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
+	else
+	{
+		missile.velocity = aim(self, 10000);
+		missile.velocity = missile.velocity * 600;
+		missile.velocity_z = 200;
+	}
+
+	missile.avelocity = '300 300 300';
+	missile.angles = vectoangles(missile.velocity);
+	missile.touch = T_MissileTouch;
+	
+// set missile duration
+	missile.nextthink = time + 2.0;
+	missile.think = SUB_Remove;
+
+	setmodel (missile, "progs/missile.mdl");
+	setsize (missile, '0 0 0', '0 0 0');		
+	setorigin (missile, self.origin);
+};
+
 
 /*
 ===============================================================================
@@ -967,7 +1021,7 @@ void() W_Alt_Attack =
 	else if (self.weapon == IT_ROCKET_LAUNCHER)
 	{
 		player_rocket1();
-		W_FireGrenade();
+		W_FireDropRocket();
 		self.attack_finished = time + 0.6;
 	}
 
