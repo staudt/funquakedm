@@ -257,6 +257,37 @@ void(float shotcount, vector dir, vector spread) FireBullets =
 	ApplyMultiDamage ();
 };
 
+
+void() ShotgunLaser_Touch =
+{
+	local vector org;
+	
+	if (other == self.owner)
+		return;		// don't explode on owner
+
+	if (pointcontents(self.origin) == CONTENT_SKY)
+	{
+		remove(self);
+		return;
+	}
+	sound (self, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	org = self.origin - 8*normalize(self.velocity);
+	if (other.health)
+	{
+		SpawnBlood (org, self.velocity*0.2, 15);
+		T_Damage (other, self, self.owner, 30);
+	}
+	else
+	{
+		WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte (MSG_BROADCAST, TE_GUNSHOT);
+		WriteCoord (MSG_BROADCAST, org_x);
+		WriteCoord (MSG_BROADCAST, org_y);
+		WriteCoord (MSG_BROADCAST, org_z);
+	}
+	remove(self);	
+};
+
 /*
 ================
 W_FireShotgun
@@ -265,14 +296,32 @@ W_FireShotgun
 void() W_FireShotgun =
 {
 	local vector dir;
-
-	sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
-
+	self.effects = self.effects | EF_MUZZLEFLASH;
 	self.punchangle_x = -2;
-	
+
+	sound (self, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+
+	newmis = spawn();
+	newmis.owner = self;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	newmis.effects = EF_DIMLIGHT;
+
+	setmodel (newmis, "progs/laser.mdl");
+	setsize (newmis, '0 0 0', '0 0 0');		
+	setorigin (newmis, self.origin + '0 0 16');
+	dir = aim (self, 1000);
+	newmis.angles = vectoangles(dir);
+	newmis.velocity = dir * 1000;
+
+	newmis.nextthink = time + 3;
+	newmis.think = SUB_Remove;
+	newmis.touch = ShotgunLaser_Touch;
+
+	/*sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
 	self.currentammo = self.ammo_shells = self.ammo_shells - 0.5;
 	dir = aim (self, 100000);
-	FireBullets (4, dir, '0.04 0.04 0');
+	FireBullets (4, dir, '0.04 0.04 0');*/
 };
 
 

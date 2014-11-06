@@ -255,6 +255,9 @@ void() worldspawn =
 
 	precache_sound ("misc/water1.wav");			// swimming
 	precache_sound ("misc/water2.wav");			// swimming
+	
+	precache_sound ("enforcer/enfstop.wav");		// laser, from the shotgun
+	precache_sound ("enforcer/enfire.wav");			// laser, from the shotgun
 
 	precache_model ("progs/player.mdl");
 	precache_model ("progs/eyes.mdl");
@@ -289,6 +292,7 @@ void() worldspawn =
 	precache_model ("progs/zom_gib.mdl");
 
 	precache_model ("progs/v_light.mdl");
+	precache_model ("progs/laser.mdl");		// laser, from the shotgun
 	
 
 //
