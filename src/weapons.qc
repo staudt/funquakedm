@@ -722,8 +722,10 @@ void(float ox) W_FireSpikes =
 	sound (self, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	self.attack_finished = time + 0.2;
 	self.currentammo = self.ammo_nails = self.ammo_nails - 1;
-	dir = aim (self, 1000);
-	launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
+	//dir = aim (self, 1000);
+	//launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
+	dir = aim (self, 10000);
+	FireBullets (4, dir, '0.14 0.08 0');
 
 	self.punchangle_x = -2;
 };
