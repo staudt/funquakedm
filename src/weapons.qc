@@ -51,7 +51,7 @@ void() W_FireAxe =
 	{
 		trace_ent.axhitme = 1;
 		SpawnBlood (org, '0 0 0', 60);
-		T_Damage (trace_ent, self, self, 55);	// two hit kill
+		T_Damage (trace_ent, self, self, 52);	// two hit kill
 	}
 	else
 	{	// hit wall
@@ -1505,6 +1505,6 @@ When player is low on health, he bleeds
 */
 void(entity org) Bleeding =
 {
-        SpawnBlood (org.origin, '0 0 0', 70); // make the blood
+        SpawnBlood (org.origin, '0 0 0', 60); // make the blood
 };
 
