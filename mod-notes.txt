@@ -3,24 +3,13 @@ QuakeC specs: http://www.inside3d.com/qcspecs/qc-menu.htm
 Tutorials: http://www.inside3d.com/qctut/
 Examples: http://www.gamers.org/pub/idgames2/quakec/
 
-To test:
-- monster drop backpack, players drop weapons
-
 Todos:
-- Bots?
+- FIX BUG: Hold alternate trigger for repeated shots (currently it shoots once per click)
 - footstep sounds
-- Alternate weapon shot (http://www.inside3d.com/qctut/qctut-74.shtml)
-- Drop all weapons when dead
-- Gradually speeding rockets (http://www.inside3d.com/qctut/qctut-81.shtml)
-- Weapons:
-	Axe: Stronger, Stun effect / (Grappling hook?) http://www.inside3d.com/qctut/qctut-78.shtml
-	Shotgun: Slow but stronger shot / Slower double shot
-	Machine Gun: Gradually fast shots / (Driller?)
-	Rocket Launcher: Rocket / Stick Grenade
-	Lasergun: Slow instagib discharge / Shield?
-	Druken rockets: fire multiple druken rockets (http://www.inside3d.com/qctut/qctut-75.shtml)
-- Melee atack (CoD-like)
+- More changes in weapons (2nd trigger, lightning, super nailgun and grenade launcher)
+- Flying items (kicked or blasted) will teleport as well
 ---
+- Bots?
 other weapon ideas:
 	multi-grenades, chainsaw, landmines, homing missile
 	stick grenades (http://www.inside3d.com/qctut/qctut-19.shtml)
