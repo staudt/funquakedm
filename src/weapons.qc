@@ -41,7 +41,7 @@ void() W_FireAxe =
 
 	makevectors (self.v_angle);
 	source = self.origin + '0 0 16';
-	traceline (source, source + v_forward*80, FALSE, self); //better reach
+	traceline (source, source + v_forward*70, FALSE, self); //better reach
 	if (trace_fraction == 1.0)
 		return;
 	
@@ -300,6 +300,7 @@ void() W_FireShotgun =
 	self.punchangle_x = -2;
 
 	sound (self, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
 
 	newmis = spawn();
 	newmis.owner = self;
