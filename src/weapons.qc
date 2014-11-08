@@ -318,11 +318,33 @@ void() W_FireShotgun =
 	newmis.nextthink = time + 3;
 	newmis.think = SUB_Remove;
 	newmis.touch = ShotgunLaser_Touch;
+};
 
-	/*sound (self, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
-	self.currentammo = self.ammo_shells = self.ammo_shells - 0.5;
-	dir = aim (self, 100000);
-	FireBullets (4, dir, '0.04 0.04 0');*/
+void() W_FireShotgun2 =
+{
+	local vector dir;
+	self.effects = self.effects | EF_MUZZLEFLASH;
+	self.punchangle_x = -2;
+
+	sound (self, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
+
+	newmis = spawn();
+	newmis.owner = self;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	newmis.effects = EF_DIMLIGHT;
+
+	setmodel (newmis, "progs/lavaball.mdl");
+	setsize (newmis, '0 0 0', '0 0 0');		
+	setorigin (newmis, self.origin + '0 0 16');
+	dir = aim (self, 1000);
+	newmis.angles = vectoangles(dir);
+	newmis.velocity = dir * 100;
+
+	newmis.nextthink = time + 6;
+	newmis.think = SUB_Remove;
+	newmis.touch = ShotgunLaser_Touch;
 };
 
 
@@ -1070,6 +1092,12 @@ void() W_Alt_Attack =
 	makevectors	(self.v_angle);		// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
 
+	if (self.weapon == IT_SHOTGUN)
+	{
+		player_shot1 ();
+		W_FireShotgun2 ();
+		self.attack_finished = time + 1.2;
+	}
 	if (self.weapon == IT_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
