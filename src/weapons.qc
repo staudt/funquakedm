@@ -275,7 +275,7 @@ void() ShotgunLaser_Touch =
 	if (other.health)
 	{
 		SpawnBlood (org, self.velocity*0.2, 15);
-		T_Damage (other, self, self.owner, 30);
+		T_Damage (other, self, self.owner, 23);
 	}
 	else
 	{
@@ -300,7 +300,7 @@ void() W_FireShotgun =
 	self.punchangle_x = -2;
 
 	sound (self, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
-	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
+	self.currentammo = self.ammo_shells = self.ammo_shells - 3;
 
 	newmis = spawn();
 	newmis.owner = self;
@@ -323,6 +323,50 @@ void() W_FireShotgun =
 	self.currentammo = self.ammo_shells = self.ammo_shells - 0.5;
 	dir = aim (self, 100000);
 	FireBullets (4, dir, '0.04 0.04 0');*/
+};
+
+void() DrunkLaserMove =
+{
+    self.velocity = ((self.velocity + ((v_right * 121.000) * crandom ())) + ((v_up * 121.000) * crandom ()));
+    self.nextthink = time + 0.08;
+	self.think = DrunkLaserMove;
+};
+
+void(entity shooter) ShootDrunkLaser =
+{
+	local vector dir;
+
+	newmis = spawn();
+	newmis.owner = shooter;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	newmis.effects = EF_DIMLIGHT;
+
+	setmodel (newmis, "progs/laser.mdl");
+	setsize (newmis, '0 0 0', '0 0 0');		
+	setorigin (newmis, shooter.origin + '0 0 16');
+	dir = aim (shooter, 10);
+	newmis.angles = vectoangles(dir);
+	newmis.velocity = dir * 800;
+
+	newmis.nextthink = time + 0.05;
+	newmis.think = DrunkLaserMove;
+	newmis.touch = ShotgunLaser_Touch;
+}
+
+void() W_FireShotgun2 =
+{
+	local vector dir;
+
+	self.effects = self.effects | EF_MUZZLEFLASH;
+	self.punchangle_x = -5;
+
+	sound (self, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+	self.currentammo = self.ammo_shells = self.ammo_shells - 1;
+
+	ShootDrunkLaser(self);
+	ShootDrunkLaser(self);
+	ShootDrunkLaser(self);
 };
 
 
@@ -1070,7 +1114,13 @@ void() W_Alt_Attack =
 	makevectors	(self.v_angle);		// calculate forward angle for velocity
 	self.show_hostile = time + 1;	// wake monsters up
 
-	if (self.weapon == IT_SUPER_SHOTGUN)
+	if (self.weapon == IT_SHOTGUN)
+	{
+		player_shot1 ();
+		W_FireShotgun2 ();
+		self.attack_finished = time + 0.7;
+	}
+	else if (self.weapon == IT_SUPER_SHOTGUN)
 	{
 		player_shot1 ();
 		W_FireSuperShotgun (2);
