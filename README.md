@@ -26,8 +26,9 @@ Current Features
    * The Axe is stronger
    * Shotgun (now a laser gun):
       * 1st trigger: Laser beam (like the enforcer's)
+      * 2nd trigger: Triple drunk Laser beams (will spread in random directions)
    * Super Shotgun:
-      * 1st trigger: 1 shell shot (like the regular shotgun, slightly slower and stronger)
+      * 1st trigger: single shell shot (like the regular shotgun, slightly slower and stronger)
       * 2nd trigger: Double shell shot (stronger than the old super shotgun)
    * Nailgun (now a machinegun):
       * 1st trigger: Shoots very fast shotgun-like bullets (much cooler!)
