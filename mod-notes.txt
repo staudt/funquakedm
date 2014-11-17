@@ -4,16 +4,20 @@ Tutorials: http://www.inside3d.com/qctut/
 Examples: http://www.gamers.org/pub/idgames2/quakec/
 
 Todos:
+- speeding super machine gun
+- 2nd trigger for weapons:
+	- spread shots for machine guns
+	- molotov for grenade launcher (http://www.inside3d.com/qctut/qctut-81.shtml)
+	- Railgun for lighning (return the regular laser to 1st trigger)
+	- Axe?
 - FIX BUG: Hold alternate trigger for repeated shots (currently it shoots once per click)
+- duble tap a direction to dodge
 - footstep sounds
-- More changes in weapons (2nd trigger, lightning, super nailgun and grenade launcher)
-- Flying items (kicked or blasted) will teleport as well
----
-- Bots?
-other weapon ideas:
-	multi-grenades, chainsaw, landmines, homing missile
-	stick grenades (http://www.inside3d.com/qctut/qctut-19.shtml)
-	molotov (http://www.inside3d.com/qctut/qctut-81.shtml)
 
-Ideas of other mods:
+Maybe:
+- Flying items (kicked or blasted) will teleport as well
+- other weapon ideas:
+	chainsaw, landmines, homing missile, stick grenade
+
+Ideas for other mods:
 	- Horde mode
