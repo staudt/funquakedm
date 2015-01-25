@@ -673,6 +673,8 @@ void() kick_touch =
 	// only a player can kick it
 	if (other.classname != "player")
 		return;
+	if (self.classname == "player" || other.classname == "player")
+		return;
 
 	//randomize sound
 	if (random()< 0.8)
