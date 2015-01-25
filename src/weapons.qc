@@ -712,31 +712,21 @@ void() W_FireGrenade =
 
 	missile = spawn ();
 	missile.owner = self;
-	missile.movetype = MOVETYPE_BOUNCE;
+	missile.movetype = MOVETYPE_BOUNCEMISSILE;
 	missile.solid = SOLID_BBOX;
 	missile.classname = "grenade";
 		
 // set missile speed	
 
 	makevectors (self.v_angle);
-
-	if (self.v_angle_x)
-		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
-	else
-	{
-		missile.velocity = aim(self, 10000);
-		missile.velocity = missile.velocity * 600;
-		missile.velocity_z = 200;
-	}
-
-	missile.avelocity = '300 300 300';
-
+	missile.velocity = aim(self, 1000);
+	missile.velocity = missile.velocity * 600;
 	missile.angles = vectoangles(missile.velocity);
 	
 	missile.touch = GrenadeTouch;
 	
 // set missile duration
-	missile.nextthink = time + 2.5;
+	missile.nextthink = time + 12.0;	// long time to explode
 	missile.think = GrenadeExplode;
 
 	setmodel (missile, "progs/grenade.mdl");
@@ -762,7 +752,7 @@ void(vector org, vector dir) launch_spike =
 {
 	newmis = spawn ();
 	newmis.owner = self;
-	newmis.movetype = MOVETYPE_FLYMISSILE;
+	newmis.movetype = MOVETYPE_BOUNCEMISSILE;
 	newmis.solid = SOLID_BBOX;
 
 	newmis.angles = vectoangles(dir);
@@ -820,7 +810,7 @@ void(float ox) W_FireSpikes =
 	//dir = aim (self, 1000);
 	//launch_spike (self.origin + '0 0 16' + v_right*ox, dir);
 	dir = aim (self, 10000);
-	FireBullets (4, dir, '0.14 0.08 0');
+	FireBullets (6, dir, '0.14 0.08 0');
 
 	self.punchangle_x = -2;
 };
@@ -886,8 +876,10 @@ local float rand;
 // hit something that bleeds
 	if (other.takedamage)
 	{
-		spawn_touchblood (18);
-		T_Damage (other, self, self.owner, 18);
+		spawn_touchblood (24);
+		T_Damage (other, self, self.owner, 24);
+		remove(self);
+
 	}
 	else
 	{
@@ -897,8 +889,6 @@ local float rand;
 		WriteCoord (MSG_BROADCAST, self.origin_y);
 		WriteCoord (MSG_BROADCAST, self.origin_z);
 	}
-
-	remove(self);
 
 };
 
