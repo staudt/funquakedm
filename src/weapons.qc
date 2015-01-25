@@ -275,7 +275,8 @@ void() ShotgunLaser_Touch =
 	if (other.health)
 	{
 		SpawnBlood (org, self.velocity*0.2, 15);
-		T_Damage (other, self, self.owner, 23);
+		T_Damage (other, self, self.owner, 32);
+		KickItem(other, self);
 	}
 	else
 	{
@@ -313,7 +314,7 @@ void() W_FireShotgun =
 	setorigin (newmis, self.origin + '0 0 16');
 	dir = aim (self, 1000);
 	newmis.angles = vectoangles(dir);
-	newmis.velocity = dir * 1000;
+	newmis.velocity = dir * 1500;
 
 	newmis.nextthink = time + 3;
 	newmis.think = SUB_Remove;

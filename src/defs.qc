@@ -143,6 +143,7 @@ void		end_sys_globals;		// flag for structure dumping
 .string		weaponmodel;
 .float		weaponframe;
 .float		currentammo;
+.float		dropped;
 .float		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
 
 .float		items;			// bit flags
