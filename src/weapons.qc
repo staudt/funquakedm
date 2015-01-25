@@ -51,7 +51,7 @@ void() W_FireAxe =
 	{
 		trace_ent.axhitme = 1;
 		SpawnBlood (org, '0 0 0', 60);
-		T_Damage (trace_ent, self, self, 52);	// two hit kill
+		T_Damage (trace_ent, self, self, 90);	// two hit kill
 	}
 	else
 	{	// hit wall
@@ -1429,7 +1429,7 @@ void() CheckMelee =
 		else
 			player_axed1 ();
 		self.attack_finished = time + 0.5;
-		self.melee_time = time + 0.9;
+		self.melee_time = time + 0.5;
 	}
 	self.melee = FALSE;
 };
@@ -1555,6 +1555,6 @@ When player is low on health, he bleeds
 */
 void(entity org) Bleeding =
 {
-        SpawnBlood (org.origin, '0 0 0', 60); // make the blood
+        SpawnBlood (org.origin, '0 0 0', 40); // make the blood
 };
 
