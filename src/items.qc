@@ -545,7 +545,12 @@ void() weapon_touch =
 	self.model = string_null;
 	self.solid = SOLID_NOT;
 	if (deathmatch == 1)
-		self.nextthink = time + 30;
+		if (self.dropped != TRUE) {
+			bprint (" nao droppado\n");
+			self.nextthink = time + 30;
+		} else {
+			bprint ("droppado\n");
+		}
 	self.think = SUB_regen;
 	
 	activator = other;
@@ -1465,6 +1470,7 @@ void(float weapon) DropWeapon =
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
 	item.movetype = MOVETYPE_TOSS;
+	item.dropped = TRUE;
 	item.touch = weapon_touch;
 
 	item.nextthink = time + 120;	// remove after 2 minutes

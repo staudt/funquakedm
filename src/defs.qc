@@ -106,6 +106,7 @@ void		end_sys_globals;		// flag for structure dumping
 .float		ltime;			// local time for entity
 .float		movetype;
 .float		solid;
+.float		dropped;
 
 .vector		origin;			// ***
 .vector		oldorigin;		// ***
@@ -143,7 +144,6 @@ void		end_sys_globals;		// flag for structure dumping
 .string		weaponmodel;
 .float		weaponframe;
 .float		currentammo;
-.float		dropped;
 .float		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
 
 .float		items;			// bit flags

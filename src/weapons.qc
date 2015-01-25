@@ -1470,8 +1470,8 @@ void() ImpulseCommands =
 	if (self.impulse == 20)
 		self.melee = 1;
 	
-	if (self.impulse == 21)
-		self.alt_attack = 1;
+	//if (self.impulse == 21)
+		//self.alt_attack = 1;
 
 	if (self.impulse == 255)
 		QuadCheat ();
