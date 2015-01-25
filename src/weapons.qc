@@ -500,7 +500,7 @@ void() W_FireRocket =
 	missile.touch = T_MissileTouch;
 	
 // set missile duration
-	missile.nextthink = time + 0.4;
+	missile.nextthink = time + 0.3;
 	missile.think = SUB_RocketDrunk;
 
 	setmodel (missile, "progs/missile.mdl");
