@@ -546,10 +546,7 @@ void() weapon_touch =
 	self.solid = SOLID_NOT;
 	if (deathmatch == 1)
 		if (self.dropped != TRUE) {
-			bprint (" nao droppado\n");
 			self.nextthink = time + 30;
-		} else {
-			bprint ("droppado\n");
 		}
 	self.think = SUB_regen;
 	
