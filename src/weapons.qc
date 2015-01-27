@@ -1061,7 +1061,7 @@ void() W_Attack =
 	{
 		player_shot1 ();
 		W_FireSuperShotgun (2);
-		self.attack_finished = time + 0.9;
+		self.attack_finished = time + 1.2;
 	}
 	else if (self.weapon == IT_NAILGUN)
 	{
