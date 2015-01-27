@@ -712,18 +712,24 @@ void() W_FireGrenade =
 
 	missile = spawn ();
 	missile.owner = self;
-	missile.movetype = MOVETYPE_BOUNCEMISSILE;
+	missile.movetype = MOVETYPE_BOUNCE; // MOVETYPE_BOUNCEMISSILE;
 	missile.solid = SOLID_BBOX;
 	missile.classname = "grenade";
 		
 // set missile speed	
 
 	makevectors (self.v_angle);
-	missile.velocity = aim(self, 1000);
-	missile.velocity = missile.velocity * 600;
-	missile.angles = vectoangles(missile.velocity);
-	
-	missile.touch = GrenadeTouch;
+	if (self.v_angle_x)
+		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
+	else
+	{
+		missile.velocity = aim(self, 10000);
+		missile.velocity = missile.velocity * 600;
+		missile.velocity_z = 200;
+	}
+
+	missile.avelocity = '300 300 300';
+	missile.touch = T_MissileTouch;
 	
 // set missile duration
 	missile.nextthink = time + 12.0;	// long time to explode
