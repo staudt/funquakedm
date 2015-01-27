@@ -9,6 +9,12 @@ It is still in beta, so expect a few bugs.
 
 The compiler used to build this source is FTEQCC, which can be found here: http://www.fteqw.com/ftedownloads/30-downloads/75-maintrunk
 
+Installation
+============
+  1. Create a *funquakedm* folder inside the Quake game folder and copy the *progs.dat* file inside it (so you'll have "<quake dir>\funquakedm\progs.dat").
+  2. Run *quake.exe -game funquakedm* (or replace quake.exe with your favorite Quake client)
+  3. Start your server and have fun! Only the server needs to follow these steps!
+
 Current Features
 ================
  * One-key instant melee attack with the axe (CoD-like) - The Axe is finally useful!
