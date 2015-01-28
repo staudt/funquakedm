@@ -10,7 +10,7 @@ The compiler used to build this source is FTEQCC, which can be found here: http:
 Installation
 ============
   1. Create folder named **funquakedm** inside the Quake game folder
-  2. Download the **progs.dat** file from this repository and place inside the funquakedm directory (so you'll have "<quake dir>\funquakedm\progs.dat")
+  2. Download the **progs.dat** file from this repository and place inside the funquakedm directory (so that you'll have "[quake dir]\funquakedm\progs.dat")
   2. Run **quake.exe -game funquakedm** (or replace quake.exe with your favorite Quake client)
   3. Start your server and have fun!
 
@@ -24,7 +24,7 @@ Current Features
    * You can even blast away grenades and nails on explosions
  * Players now drop all their weapons when they die (instead of a backpack)
  * Players starts bleeding when near death (< 20 health)
- * Weapons
+ * Weapons Improvements:
    * **The Axe**: is much stronger
    * **Shotgun** (now a laser gun): Laser beam that tosses the target far away (good defense)
    * **Super Shotgun**: More bullets, takes longer between shots
@@ -34,6 +34,7 @@ Current Features
    * **Rocket Launcher**: Rocket will go drunk at long range (kinda like actual rockets)
    * **Lightning gun**: A single super strong bolt that takes a long time to charge (like the Q3 Rail Gun)
 
- * Future/Maybe:
-    * [currently disabled] Secondary trigger for weapons. Every gun has a secondary attack (IMPULSE 21)
-       * Known bug: You can't hold the trigger for multiple shots, only one shot per click
+Future/Maybe
+============
+  * [currently disabled] Secondary trigger for weapons. Every gun has a secondary attack (IMPULSE 21)
+    * Known bug: You can't hold the trigger for multiple shots, only one shot per click
